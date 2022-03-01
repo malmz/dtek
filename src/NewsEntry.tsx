@@ -1,11 +1,12 @@
-import { sanitize } from 'dompurify';
+//import { sanitize } from 'dompurify';
 import { Component } from 'solid-js';
 
 const eventDateFormat = new Intl.DateTimeFormat('sv-SE', { dateStyle: 'full', timeStyle: 'short' });
 
 export const NewsEntry: Component<{ title: string, body: string, published: Date }> = (props) => {
 
-  const body = () => sanitize(props.body);
+  //const body = () => sanitize(props.body);
+  const body = () => props.body;
 
   return (
     <article class=''>

@@ -33,11 +33,11 @@ export const Navbar: Component = () => {
           <h2 class='text-md font-zinc-600'>Chalmers Student Union</h2>
         </div>
       </header>
-      <nav class='bg-zinc-900 text-zinc-200'>
+      <nav class='bg-zinc-900 text-zinc-100'>
         <ul class='flex flex-wrap justify-around items-center'>
           <For each={links}>
             {({ title, url }) =>
-              <li class='px-4 py-4'>
+              <li class='block px-4 py-4'>
                 <NavLink href={url} end>
                   <span>{title}</span>
                 </NavLink>

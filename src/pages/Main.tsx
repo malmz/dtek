@@ -1,8 +1,8 @@
-import { Component, createEffect, createResource, For, Suspense } from 'solid-js';
-import { fetchMenu } from '../menu';
+import { Component, createEffect, createResource, ErrorBoundary, For, Suspense } from 'solid-js';
 import { NewsEntry } from '../NewsEntry';
 import { Section } from '../Section';
 import { Menu } from '../Menu';
+import { NewsList } from '../NewsList';
 
 const Main: Component = () => {
 
@@ -12,23 +12,6 @@ const Main: Component = () => {
     const data: ExpressResponse[] = await resp.json();
     return parseExpressResponse(data, 'Swedish');
   }); */
-
-  const [express] = createResource(async () => {
-    let id = '3d519481-1667-4cad-d2a3-08d558129279';
-    return fetchMenu(id, 'Swedish');
-  });
-
-  const [karen] = createResource(async () => {
-    let id = '21f31565-5c2b-4b47-d2a1-08d558129279';
-    return fetchMenu(id, 'Swedish');
-  });
-
-
-
-
-  createEffect(() => {
-    console.log(express());
-  });
 
   const commities = [
     { name: 'D-Styret', url: 'https://wiki.dtek.se/wiki/Styret', logo: 'https://wiki.dtek.se/images/7/79/Styretlogga.png' },
@@ -44,13 +27,13 @@ const Main: Component = () => {
       title: 'Hackkväll',
       body: '<p>Har du en lurig labb, ett kul projekt att leka med, eller är du bara fikasugen? Ta dig då till NC:s övervåning efter afterschool på onsdag för hackkväll!</p>',
       place: 'NC',
-      date: new Date(2022, 1, 30, 18, 18),
+      published: new Date(2022, 1, 30, 18, 18),
     },
     {
       title: 'DLudeaspning',
       body: '<p>Vill du veta vad spel är egentligen? Vill du öppna ditt tredje öga? Då ska du aspa DLude! Vi drar igång med aspning i Bibblan (NC) den 28/2 18:18 med info, spel och fika så det är bara att dyka upp!</p>',
       place: 'Bibblan',
-      date: new Date(2022, 1, 28, 18, 18),
+      published: new Date(2022, 1, 28, 18, 18),
     }
   ];
 
@@ -87,18 +70,19 @@ const Main: Component = () => {
 
         <Section title='Lunch'>
           <div class='p-8 flex flex-col gap-4'>
-            <Menu title='Express Johanneberg' id='3d519481-1667-4cad-d2a3-08d558129279'></Menu>
-            <Menu title='Kårresturangen Johanneberg' id='21f31565-5c2b-4b47-d2a1-08d558129279'></Menu>
+            <Menu title='Express Johanneberg' name='johanneberg-express'></Menu>
+            <Menu title='Kårresturangen Johanneberg' name='karresturangen'></Menu>
           </div>
         </Section>
 
         <Section title='News' link={{ title: 'See all news', href: '/news' }}>
           <div class='p-8 flex flex-col gap-4'>
-            <For each={posts}>
+            <NewsList></NewsList>
+            {/* <For each={posts}>
               {(post) =>
                 <NewsEntry {...post}></NewsEntry>
               }
-            </For>
+            </For> */}
           </div>
         </Section>
 
