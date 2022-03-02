@@ -1,9 +1,8 @@
-import { Component, createResource, ErrorBoundary, For, Suspense } from 'solid-js';
+import { createResource, ErrorBoundary, For, Suspense } from 'solid-js';
+import type { Component } from 'solid-js';
 import { fetchLunch } from './api';
 
-
-export const Menu: Component<{ title: string, name: string }> = (props) => {
-
+export const Menu: Component<{ title: string; name: string }> = (props) => {
   const [menu] = createResource(() => props.name, fetchLunch);
 
   return (
@@ -13,17 +12,16 @@ export const Menu: Component<{ title: string, name: string }> = (props) => {
         <Suspense fallback={<div>Loading...</div>}>
           <div class='flex flex-col gap-2'>
             <For each={menu()?.dishes}>
-              {(dish) =>
+              {(dish) => (
                 <div class='flex gap-x-2 text-sm flex-wrap'>
-                  <span class='font-semibold shrink-0'>{dish.name}</span>
-                  <span>{dish.type}</span>
+                  <span class='font-semibold shrink-0'>{dish.type}</span>
+                  <span>{dish.name}</span>
                 </div>
-              }
+              )}
             </For>
           </div>
         </Suspense>
       </ErrorBoundary>
-
     </div>
   );
-}
+};

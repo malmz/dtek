@@ -1,8 +1,8 @@
 import { useRoutes } from 'solid-app-router';
-import { Component, Suspense } from 'solid-js';
+import type { Component } from 'solid-js';
+import { Suspense } from 'solid-js';
 import { Navbar } from './Navbar';
 import { routes } from './routes';
-
 
 export const App: Component = () => {
   const Routes = useRoutes(routes);
@@ -14,4 +14,4 @@ export const App: Component = () => {
       </Suspense>
     </>
   );
-}
+};

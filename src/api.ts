@@ -7,22 +7,22 @@ export interface News {
   endDate?: Date;
 }
 
-export interface Menu {
-  lastUpdated: Date;
-  dishes: Dish[];
-}
-
 export interface Dish {
   type: string;
   name: string;
 }
 
-const baseUrl = "http://localhost:3001";
+export interface Menu {
+  lastUpdated: Date;
+  dishes: Dish[];
+}
+
+const baseUrl = 'http://localhost:3001';
 
 export async function fetchNews(): Promise<News[]> {
-  const url = new URL("/news", baseUrl);
+  const url = new URL('/news', baseUrl);
   const response = await fetch(url.toString());
-  const news: News[] = await response.json();
+  const news = (await response.json()) as News[];
 
   return news.map((n) => ({
     ...n,
@@ -32,10 +32,10 @@ export async function fetchNews(): Promise<News[]> {
   }));
 }
 
-export async function fetchLunch(name: string): Promise<Menu> {
+export async function fetchLunch(id: string): Promise<Menu> {
   const url = new URL(`/lunch`, baseUrl);
-  url.searchParams.append("name", name);
+  url.searchParams.append('name', id);
   const response = await fetch(url.toString());
-  const menu = await response.json();
+  const menu = (await response.json()) as Menu;
   return menu;
 }
