@@ -9,6 +9,7 @@ const Lunch: Component = () => {
         <Menu title='Kårresturangen Johanneberg' name='karresturangen'></Menu>
         <Menu title='Hyllan' name='hyllan'></Menu>
         <Menu title='S.M.A.K' name='smak'></Menu>
+        <Menu title='Linsen' name='linsen'></Menu>
       </div>
     </main>
   );

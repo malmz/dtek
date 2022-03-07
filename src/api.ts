@@ -8,13 +8,8 @@ export interface News {
 }
 
 export interface Dish {
-  type: string;
+  type?: string;
   name: string;
-}
-
-export interface Menu {
-  lastUpdated: Date;
-  dishes: Dish[];
 }
 
 const baseUrl = 'http://localhost:3001';
@@ -32,10 +27,10 @@ export async function fetchNews(): Promise<News[]> {
   }));
 }
 
-export async function fetchLunch(id: string): Promise<Menu> {
+export async function fetchLunch(id: string): Promise<Dish[]> {
   const url = new URL(`/lunch`, baseUrl);
   url.searchParams.append('name', id);
   const response = await fetch(url.toString());
-  const menu = (await response.json()) as Menu;
+  const menu = (await response.json()) as Dish[];
   return menu;
 }

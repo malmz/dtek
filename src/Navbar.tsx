@@ -24,6 +24,7 @@ export const Navbar: Component = () => {
   const links = [
     { title: 'Home', url: '/' },
     { title: 'News', url: '/news' },
+    { title: 'Lunch', url: '/lunch' },
   ];
 
   return (
@@ -39,7 +40,7 @@ export const Navbar: Component = () => {
         </h1>
       </div>
 
-      <nav class='flex gap-12 sm:mr-12'>
+      <nav class='flex gap-4 sm:mr-12 sm:gap-12'>
         <For each={links}>
           {({ title, url }) => (
             <NavLink class='' href={url} end>
