@@ -39,7 +39,7 @@ export const Committees: Component = (props) => {
   let scrollElem: HTMLDivElement;
   const btnclick = (e: Event) => {
     const elem = document.getElementById('committee-2');
-    scrollElem.
+    scrollElem.scrollTo();
   };
 
   return (
