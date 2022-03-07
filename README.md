@@ -1,27 +1,39 @@
+# Dtek.se
+
+This is a experimental rewrite of [dtek.se](https://dtek.se). The motivativation for this rewrite is to make it more maintainable, add more features and more usable on mobile.
+
+The site is build with [solidjs](https://solidjs.com) and [tailwindcss](https://tailwindcss.com). The backend is available at [dtek-backend](https://github.com/Malmz/dtek-backend).
+
 ## Usage
 
-Those templates dependencies are maintained via [pnpm](https://pnpm.io) via `pnpm up -Lri`.
-
-This is the reason you see a `pnpm-lock.yaml`. That being said, any package manager will work. This file can be safely be removed once you clone a template.
-
+### Installation
 ```bash
-$ npm install # or pnpm install or yarn install
+$ pnpm install # or npm install or yarn install
 ```
 
-### Learn more on the [Solid Website](https://solidjs.com) and come chat with us on our [Discord](https://discord.com/invite/solidjs)
+### Running
 
-## Available Scripts
+```bash
+$ pnpm run dev # to run on in devmode
+```
 
-In the project directory, you can run:
-
-### `npm dev` or `npm start`
-
-Runs the app in the development mode.<br>
+This will start the app in development mode on port 3000.
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The page will reload if you make edits.
 
-The page will reload if you make edits.<br>
+Make sure to run the backend server as well.
 
-### `npm run build`
+```bash
+$ pnpm run host # to expose to the network
+```
+This will start the app in development mode on port 3000.
+You can now access the app from another device on the network.
+
+### Building
+
+```bash
+$ pnpm run build # to build the app for production
+```
 
 Builds the app for production to the `dist` folder.<br>
 It correctly bundles Solid in production mode and optimizes the build for the best performance.
@@ -29,6 +41,4 @@ It correctly bundles Solid in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.<br>
 Your app is ready to be deployed!
 
-## Deployment
 
-You can deploy the `dist` folder to any static host provider (netlify, surge, now, etc.)
