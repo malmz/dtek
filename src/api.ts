@@ -12,7 +12,7 @@ export interface Dish {
   name: string;
 }
 
-const baseUrl = 'http://localhost:3001';
+const baseUrl = import.meta.env.VITE_API_URL;
 
 export async function fetchNews(): Promise<News[]> {
   const url = new URL('/news', baseUrl);

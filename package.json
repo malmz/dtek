@@ -7,7 +7,7 @@
     "dev": "vite",
     "host": "vite --host",
     "build": "vite build",
-    "gh-build": "vite build --base /dtek/ --outDir docs",
+    "gh-build": "vite build --base /dtek/ --outDir docs --mode staging",
     "serve": "vite preview"
   },
   "license": "MIT",
