@@ -17,10 +17,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       
-      - name: Setup Node
-        uses: actions/setup-node@v2
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2.2.1
         with:
-          node-version: 17
+          version: 6.32.2
+          
+      
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
           cache: 'pnpm'
           
       - run: pnpm install
