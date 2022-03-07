@@ -7,30 +7,6 @@ import { NewsList } from '../NewsList';
 import { Section } from '../Section';
 
 const Main: Component = () => {
-  /*
-   *const [express] = createResource(async () => {
-   *let id = '3d519481-1667-4cad-d2a3-08d558129279';
-   *const resp = await fetch(`http://carbonateapiprod.azurewebsites.net/api/v1/mealprovidingunits/${id}/dishoccurrences`);
-   *const data: ExpressResponse[] = await resp.json();
-   *return parseExpressResponse(data, 'Swedish');
-   *});
-   */
-
-  const posts = [
-    {
-      title: 'Hackkväll',
-      body: '<p>Har du en lurig labb, ett kul projekt att leka med, eller är du bara fikasugen? Ta dig då till NC:s övervåning efter afterschool på onsdag för hackkväll!</p>',
-      place: 'NC',
-      published: new Date(2022, 1, 30, 18, 18),
-    },
-    {
-      title: 'DLudeaspning',
-      body: '<p>Vill du veta vad spel är egentligen? Vill du öppna ditt tredje öga? Då ska du aspa DLude! Vi drar igång med aspning i Bibblan (NC) den 28/2 18:18 med info, spel och fika så det är bara att dyka upp!</p>',
-      place: 'Bibblan',
-      published: new Date(2022, 1, 28, 18, 18),
-    },
-  ];
-
   const scrollHandle = (e: Event) => {
     console.log(e);
   };

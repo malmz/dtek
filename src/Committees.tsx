@@ -36,10 +36,18 @@ const committeesData = [
 
 export const Committees: Component = (props) => {
   const committees = () => committeesData;
+  let scrollElem: HTMLDivElement;
+  const btnclick = (e: Event) => {
+    const elem = document.getElementById('committee-2');
+    scrollElem.
+  };
 
   return (
     <>
-      <div class='snap-mandatory snap-x grid grid-flow-col overflow-x-auto sm:gap-4'>
+      <div
+        ref={scrollElem!}
+        class='snap-mandatory snap-x grid grid-flow-col overflow-x-auto sm:gap-4'
+      >
         <div class='w-12 sm:w-72'></div>
         <For each={committees()}>
           {(data, i) => (
@@ -60,6 +68,9 @@ export const Committees: Component = (props) => {
           )}
         </For>
         <div class='w-12 sm:w-72'></div>
+      </div>
+      <div>
+        <button onClick={btnclick}>Hello</button>
       </div>
       <div class='flex justify-center gap-2 mt-2'>
         <For each={committees()}>
