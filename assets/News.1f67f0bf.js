@@ -1,0 +1,1 @@
+import{t as e,i as o,c as s}from"./vendor.537e7905.js";import{N as r}from"./NewsList.9bd57e73.js";import"./api.54eae58e.js";const a=e('<div class="p-8 flex flex-col gap-4"></div>',2),c=()=>(()=>{const t=a.cloneNode(!0);return o(t,s(r,{})),t})();export{c as default};
