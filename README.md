@@ -1,4 +1,7 @@
-# Dtek.se
+# Dtek.se 
+
+Live demo at [dtek.netlify.app](https://dtek.netlify.app) 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/efa8b640-0882-4547-961a-ff5cfbe75e44/deploy-status)](https://app.netlify.com/sites/dtek/deploys)
 
 This is a experimental rewrite of [dtek.se](https://dtek.se). The motivativation for this rewrite is to make it more maintainable, add more features and more usable on mobile.
 
