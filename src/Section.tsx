@@ -7,7 +7,7 @@ export const SectionHeader: Component<{
   link?: { title: string; href: string };
 }> = (props) => {
   return (
-    <div class='flex justify-between justify-items-center px-8 py-4 mt-4'>
+    <div class='mt-4 flex justify-between justify-items-center px-8 py-4'>
       <h1 class='text-3xl font-semibold '>{props.title}</h1>
       <Show when={props.link}>
         <Link class='flex hover:underline' href={props.link!.href}>

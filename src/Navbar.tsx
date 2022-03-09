@@ -1,4 +1,4 @@
-import { NavLink } from 'solid-app-router';
+import { Link, NavLink } from 'solid-app-router';
 import type { Component } from 'solid-js';
 import { For } from 'solid-js';
 
@@ -28,6 +28,69 @@ export const Navbar: Component = () => {
   ];
 
   return (
+    <header class='navbar bg-base-100'>
+      <div class='flex flex-1'>
+        <img
+          class='aspect-square h-8'
+          src='https://dtek.se/static/datalogo.svg'
+          alt='Datas logo'
+        />
+        <Link
+          href='/'
+          class='btn btn-ghost font-mono text-2xl font-semibold normal-case text-zinc-900'
+        >
+          Dtek
+        </Link>
+      </div>
+      <nav class='dropdown-end dropdown flex-none lg:hidden'>
+        <label tabindex='0' class='btn btn-ghost'>
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            class='h-5 w-5'
+            fill='none'
+            viewBox='0 0 24 24'
+            stroke='currentColor'
+          >
+            <path
+              stroke-linecap='round'
+              stroke-linejoin='round'
+              stroke-width='2'
+              d='M4 6h16M4 12h8m-8 6h16'
+            />
+          </svg>
+        </label>
+        <ul
+          tabindex='0'
+          class='dropdown-content menu rounded-box mt-4 w-52 bg-base-100 p-2 shadow'
+        >
+          <For each={links}>
+            {({ title, url }) => (
+              <li>
+                <NavLink href={url} end>
+                  <span>{title}</span>
+                </NavLink>
+              </li>
+            )}
+          </For>
+        </ul>
+      </nav>
+      <nav class='hidden flex-none lg:block'>
+        <ul class='menu rounded-box menu-horizontal p-2'>
+          <For each={links}>
+            {({ title, url }) => (
+              <li>
+                <NavLink href={url} end>
+                  <span>{title}</span>
+                </NavLink>
+              </li>
+            )}
+          </For>
+        </ul>
+      </nav>
+    </header>
+  );
+
+  /* return (
     <header class='p-8 flex justify-between'>
       <div class='flex'>
         <img
@@ -50,7 +113,7 @@ export const Navbar: Component = () => {
         </For>
       </nav>
     </header>
-  );
+  ); */
 
   /*
    * return (

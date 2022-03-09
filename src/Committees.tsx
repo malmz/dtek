@@ -50,7 +50,7 @@ export const Committees: Component = (props) => {
     <>
       <div
         ref={scrollElem!}
-        class='snap-mandatory snap-x grid grid-flow-col overflow-x-scroll sm:gap-4 scroll-p-8'
+        class='grid snap-x snap-mandatory scroll-p-8 grid-flow-col overflow-x-scroll sm:gap-4'
       >
         <div class='w-12 sm:w-72 md:w-80'></div>
         <For each={committees()}>
@@ -59,12 +59,12 @@ export const Committees: Component = (props) => {
               <a
                 id={`committee-${i()}`}
                 href={data.url}
-                class='p-8 w-screen h-48 flex items-center snap-center gap-5 scroll-m-4 snap-always sm:bg-gradient-to-tr sm:from-orange-400 sm:to-red-400 sm:text-zinc-50 sm:w-96 sm:shrink-0 sm:rounded-md sm:shadow-md lg:snap-start'
+                class='flex h-48 w-screen snap-center snap-always scroll-m-4 items-center gap-5 p-8 sm:w-96 sm:shrink-0 sm:rounded-md sm:bg-gradient-to-tr sm:from-orange-400 sm:to-red-400 sm:text-zinc-50 sm:shadow-md lg:snap-start'
               >
                 {/* sm:shadow-md sm:rounded-lg bg-gradient-to-tr from-orange-400 to-red-400 text-zinc-50 gap-5 */}
                 <img src={data.logo} alt='Logo' class='h-32' />
                 <div>
-                  <h3 class='font-semibold text-2xl'>{data.name}</h3>
+                  <h3 class='text-2xl font-semibold'>{data.name}</h3>
                   <p>{data.description}</p>
                 </div>
               </a>
@@ -74,14 +74,14 @@ export const Committees: Component = (props) => {
         <div class='w-12 sm:w-72 md:w-80'></div>
       </div>
 
-      <div class='btn-group justify-center mt-4'>
+      <div class='btn-group mt-4 justify-center'>
         <For each={committees()}>
           {(_, i) => (
             <input
               type='radio'
               name='options'
               data-title={i()}
-              class='btn'
+              class='btn btn-xs'
               onclick={() => btnclick(i())}
               checked={i() === 0}
             ></input>

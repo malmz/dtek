@@ -3,7 +3,7 @@ import { NewsList } from '../NewsList';
 
 const News: Component = () => {
   return (
-    <div class='p-8 flex flex-col gap-4'>
+    <div class='flex flex-col gap-4 p-8'>
       <NewsList></NewsList>
     </div>
   );

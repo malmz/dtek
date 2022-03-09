@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable @typescript-eslint/no-var-requires */
 const typography = require('@tailwindcss/typography');
 const daisyui = require('daisyui');
@@ -21,6 +22,8 @@ module.exports = {
           success: '#36D399',
           warning: '#FBBD23',
           error: '#F87272',
+
+          '--navbar-padding': '2rem',
         },
       },
     ],
