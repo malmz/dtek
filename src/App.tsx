@@ -1,6 +1,7 @@
 import { useRoutes } from 'solid-app-router';
 import type { Component } from 'solid-js';
 import { Suspense } from 'solid-js';
+import { Footer } from './Footer';
 import { Navbar } from './Navbar';
 import { routes } from './routes';
 
@@ -12,6 +13,7 @@ export const App: Component = () => {
       <Suspense>
         <Routes></Routes>
       </Suspense>
+      <Footer></Footer>
     </>
   );
 };
