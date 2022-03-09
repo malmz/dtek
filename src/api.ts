@@ -10,6 +10,8 @@ export interface News {
 export interface Dish {
   type?: string;
   name: string;
+  allergens?: string[];
+  emmissions?: number;
 }
 
 const baseUrl = import.meta.env.VITE_API_URL;

@@ -37,25 +37,29 @@ const committeesData = [
 export const Committees: Component = (props) => {
   const committees = () => committeesData;
   let scrollElem: HTMLDivElement;
-  const btnclick = (e: Event) => {
-    const elem = document.getElementById('committee-2');
-    scrollElem.scrollTo();
+  const btnclick = (i: number) => {
+    const elem = document.getElementById(`committee-${i}`);
+    elem?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'center',
+    });
   };
 
   return (
     <>
       <div
         ref={scrollElem!}
-        class='snap-mandatory snap-x grid grid-flow-col overflow-x-auto sm:gap-4'
+        class='snap-mandatory snap-x grid grid-flow-col overflow-x-scroll sm:gap-4 scroll-p-8'
       >
-        <div class='w-12 sm:w-72'></div>
+        <div class='w-12 sm:w-72 md:w-80'></div>
         <For each={committees()}>
           {(data, i) => (
             <div class=''>
               <a
                 id={`committee-${i()}`}
                 href={data.url}
-                class='p-8 w-screen h-48 flex items-center snap-center gap-5 scroll-m-4 snap-always sm:bg-gradient-to-tr sm:from-orange-400 sm:to-red-400 sm:text-zinc-50 sm:w-96 sm:shrink-0 sm:rounded-md sm:shadow-md'
+                class='p-8 w-screen h-48 flex items-center snap-center gap-5 scroll-m-4 snap-always sm:bg-gradient-to-tr sm:from-orange-400 sm:to-red-400 sm:text-zinc-50 sm:w-96 sm:shrink-0 sm:rounded-md sm:shadow-md lg:snap-start'
               >
                 {/* sm:shadow-md sm:rounded-lg bg-gradient-to-tr from-orange-400 to-red-400 text-zinc-50 gap-5 */}
                 <img src={data.logo} alt='Logo' class='h-32' />
@@ -67,21 +71,20 @@ export const Committees: Component = (props) => {
             </div>
           )}
         </For>
-        <div class='w-12 sm:w-72'></div>
+        <div class='w-12 sm:w-72 md:w-80'></div>
       </div>
-      <div>
-        <button onClick={btnclick}>Hello</button>
-      </div>
-      <div class='flex justify-center gap-2 mt-2'>
+
+      <div class='btn-group justify-center mt-4'>
         <For each={committees()}>
           {(_, i) => (
-            <Link
-              class='bg-orange-300 py-1 px-3 rounded-md'
-              href={`#committee-${i()}`}
-              rel='external'
-            >
-              {i()}
-            </Link>
+            <input
+              type='radio'
+              name='options'
+              data-title={i()}
+              class='btn'
+              onclick={() => btnclick(i())}
+              checked={i() === 0}
+            ></input>
           )}
         </For>
       </div>

@@ -4,10 +4,11 @@
     "es2021": true
   },
   "extends": [
-    "eslint:recommended",
+    //"eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "@solid/eslint-config-base",
-    "prettier"
+    "prettier",
+    "plugin:prettier/recommended",
+    "@solid/eslint-config-base"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {

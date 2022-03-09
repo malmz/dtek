@@ -4,65 +4,83 @@ import { For } from 'solid-js';
 import { Committees } from '../Committees';
 import { Menu } from '../Menu';
 import { NewsList } from '../NewsList';
-import { Section } from '../Section';
+import { SectionHeader } from '../Section';
 
 const Main: Component = () => {
-  const scrollHandle = (e: Event) => {
-    console.log(e);
-  };
-
   return (
     <main class='text-zinc-900'>
       <div class=''>
-        <section>
-          <div class='p-8'>
-            <h2 class='text-3xl'>
-              <span class='text-orange-500'>Welcome</span> to computer science
-              and enginering!
-            </h2>
-            <div class='mt-8 space-y-3'>
-              <p>
-                This is the Dtek portal, containing useful links and infromation
-                about studen life at chalmers. Here you can read about upcomming
-                events, find out whats for lunch and much more.
-              </p>
-              <p>
-                Datateknologssektionen is a non-profit organisation whos mission
-                is to improve student life for all studens in the computer
-                science and enginering program. We organize the opening weeks
-                for new studens, thow parties, bring student feedback to
-                Chalmers and lots more.
-              </p>
+        <div class='flex flex-col lg:flex-row overflow-hidden xl:mx-24 lg:justify-between'>
+          <section class='lg:max-w-md'>
+            <div class='p-8'>
+              <h2 class='text-3xl'>
+                <span class='text-orange-500'>Welcome</span> to computer science
+                and enginering!
+              </h2>
+              <div class='mt-8 space-y-3'>
+                <p>
+                  This is the Dtek portal, containing useful links and
+                  infromation about studen life at chalmers. Here you can read
+                  about upcomming events, find out whats for lunch and much
+                  more.
+                </p>
+                <p>
+                  Datateknologssektionen is a non-profit organisation whos
+                  mission is to improve student life for all studens in the
+                  computer science and enginering program. We organize the
+                  opening weeks for new studens, thow parties, bring student
+                  feedback to Chalmers and lots more.
+                </p>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        <Section title='Meet the committees'>
-          <div class='bg-orange-200  py-8'>
-            <Committees></Committees>
-          </div>
-        </Section>
+          <section class='grow overflow-hidden lg:my-auto'>
+            <h1 class='text-3xl font-semibold mx-8 mb-4 lg:hidden'>
+              Meet the committees
+            </h1>
+            <div class='bg-orange-200  py-8 lg:rounded-l-lg xl:rounded-lg'>
+              <h1 class='text-3xl font-semibold mx-8 mb-4 hidden lg:block'>
+                Meet the committees
+              </h1>
+              <Committees></Committees>
+            </div>
+          </section>
+        </div>
 
-        <Section
-          title='Lunch'
-          link={{ title: 'See more menus', href: '/lunch' }}
-        >
-          <div class='p-8 flex flex-col gap-4'>
-            <Menu title='Express Johanneberg' name='johanneberg-express'></Menu>
-            <Menu
-              title='Kårresturangen Johanneberg'
-              name='karresturangen'
-            ></Menu>
-          </div>
-        </Section>
+        <div class='flex flex-col lg:flex-row'>
+          <section class='flex-auto'>
+            <SectionHeader
+              title='Lunch'
+              link={{ title: 'See more menus', href: '/lunch' }}
+            ></SectionHeader>
+            <div class='p-8 flex flex-col gap-4'>
+              <Menu
+                title='Express Johanneberg'
+                name='johanneberg-express'
+              ></Menu>
+              <Menu
+                title='Kårresturangen Johanneberg'
+                name='karresturangen'
+              ></Menu>
+            </div>
+          </section>
 
-        <Section title='News' link={{ title: 'See all news', href: '/news' }}>
-          <div class='p-8 flex flex-col gap-4'>
-            <NewsList></NewsList>
-          </div>
-        </Section>
+          <div class='hidden lg:divider lg:divider-horizontal'></div>
 
-        <Section title='Proud partners with'>
+          <section class='flex-auto'>
+            <SectionHeader
+              title='News'
+              link={{ title: 'See all news', href: '/news' }}
+            ></SectionHeader>
+            <div class='p-8 flex flex-col gap-4'>
+              <NewsList></NewsList>
+            </div>
+          </section>
+        </div>
+
+        <section>
+          <SectionHeader title='Proud partners with'></SectionHeader>
           <div class='p-8 flex flex-col gap-4r'>
             <img
               class='h-16 mx-auto'
@@ -80,7 +98,7 @@ const Main: Component = () => {
               Read more
             </a>
           </div>
-        </Section>
+        </section>
       </div>
     </main>
   );
