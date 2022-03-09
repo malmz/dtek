@@ -1,6 +1,4 @@
-import { Link } from 'solid-app-router';
 import type { Component } from 'solid-js';
-import { For } from 'solid-js';
 import { Committees } from '../Committees';
 import { Menu } from '../Menu';
 import { NewsList } from '../NewsList';

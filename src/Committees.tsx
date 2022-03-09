@@ -34,7 +34,7 @@ const committeesData = [
   },
 ];
 
-export const Committees: Component = (props) => {
+export const Committees: Component = () => {
   const committees = () => committeesData;
   let scrollElem: HTMLDivElement;
   const btnclick = (i: number) => {
@@ -56,7 +56,7 @@ export const Committees: Component = (props) => {
         <For each={committees()}>
           {(data, i) => (
             <div class=''>
-              <a
+              <Link
                 id={`committee-${i()}`}
                 href={data.url}
                 class='flex h-48 w-screen snap-center snap-always scroll-m-4 items-center gap-5 p-8 sm:w-96 sm:shrink-0 sm:rounded-md sm:bg-gradient-to-tr sm:from-orange-400 sm:to-red-400 sm:text-zinc-50 sm:shadow-md lg:snap-start'
@@ -67,7 +67,7 @@ export const Committees: Component = (props) => {
                   <h3 class='text-2xl font-semibold'>{data.name}</h3>
                   <p>{data.description}</p>
                 </div>
-              </a>
+              </Link>
             </div>
           )}
         </For>
