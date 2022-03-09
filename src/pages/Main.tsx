@@ -11,7 +11,7 @@ const Main: Component = () => {
     <main class='text-zinc-900'>
       <div class=''>
         <div class='flex flex-col lg:flex-row overflow-hidden xl:mx-24 lg:justify-between'>
-          <section class='lg:max-w-md'>
+          <section class='lg:max-w-md lg:shrink-0'>
             <div class='p-8'>
               <h2 class='text-3xl'>
                 <span class='text-orange-500'>Welcome</span> to computer science
