@@ -16,8 +16,10 @@ code {
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply bg-orange-100;
+@layer base {
+  body {
+    @apply bg-orange-100;
+  }
 }
 
 @layer utilities {
