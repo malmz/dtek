@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "editorconfig.editorconfig",
+    "dbaeumer.vscode-eslint",
+    "eamodio.gitlens",
+    "lokalise.i18n-ally",
+    "vunguyentuan.vscode-postcss",
+    "esbenp.prettier-vscode",
+    "bradlc.vscode-tailwindcss",
+    "VisualStudioExptTeam.vscodeintellicode"
+  ]
+}
