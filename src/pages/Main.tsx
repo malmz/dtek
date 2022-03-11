@@ -1,3 +1,4 @@
+import { useI18n } from '@amoutonbrady/solid-i18n';
 import type { Component } from 'solid-js';
 import { For, createResource } from 'solid-js';
 import { fetchCommittees } from '../api';
@@ -9,6 +10,7 @@ import { SectionHeader } from '../Section';
 import { Welcome } from '../Welcome';
 
 const Main: Component = () => {
+  const [t] = useI18n();
   const [committees] = createResource(fetchCommittees);
 
   return (
@@ -17,20 +19,21 @@ const Main: Component = () => {
         <Welcome></Welcome>
       </section>
 
-      <section class='my-12 flex lg:mx-24'>
-        <div class='max-w-md p-8'>
-          <h1 class='my-4 text-3xl font-semibold'>Meet the committees</h1>
-          <p>
-            Get to know all the wonderfull student run committees that help
-            improve the quality of your education when studying and having lots
-            of fun when you're not.
-          </p>
+      <section class='flex lg:my-12 lg:mx-12 xl:mx-24'>
+        <div class='hidden max-w-md shrink-0 p-8 lg:block'>
+          <h1 class='my-4 text-3xl font-semibold'>{t('committees.greet')}</h1>
+          <p>{t('committees.get-to-know')}</p>
         </div>
 
-        <div class='carousel-center carousel rounded-box space-x-4 bg-base-200 p-6'>
+        <div class='carousel-center carousel space-x-4 bg-base-200 p-6 sm:snap-start sm:scroll-px-6 lg:carousel-center lg:rounded-box'>
+          <div class='carousel-item w-full shrink-0 flex-col p-8 sm:w-auto sm:max-w-sm lg:hidden'>
+            <h1 class='my-4 text-3xl font-semibold'>{t('committees.greet')}</h1>
+            <p>{t('committees.get-to-know')}</p>
+          </div>
+
           <For each={committees()}>
             {(committee) => (
-              <div class='carousel-item'>
+              <div class='carousel-item w-full flex-col sm:w-auto sm:max-w-xs sm:flex-row xl:max-w-sm'>
                 <Committee {...committee}></Committee>
               </div>
             )}
@@ -38,7 +41,7 @@ const Main: Component = () => {
         </div>
       </section>
 
-      <div class='mt-8 flex flex-col lg:mx-24 lg:flex-row'>
+      <div class='mt-8 flex flex-col lg:mx-12 lg:flex-row xl:mx-24'>
         <section class='flex-auto'>
           <SectionHeader
             title='Lunch'

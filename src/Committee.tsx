@@ -12,10 +12,10 @@ export interface CommitteeProps {
 export const Committee: Component<CommitteeProps> = (props) => {
   return (
     <Link
-      class='card card-side bg-gradient-to-tr from-orange-400 to-red-400 text-zinc-50 shadow-lg transition duration-300 ease-in-out hover:-translate-y-1 hover:shadow-xl'
+      class='card flex-col bg-gradient-to-tr sm:flex-row sm:from-orange-400 sm:to-red-400 sm:text-zinc-50 sm:shadow-lg sm:duration-300 sm:ease-in-out sm:hover:-translate-y-1 sm:hover:shadow-xl'
       href={props.homepage}
     >
-      <figure class='pl-8'>
+      <figure class='shrink-0 pl-8'>
         <img
           src={props.imageUrl}
           alt='Logo'
@@ -23,7 +23,7 @@ export const Committee: Component<CommitteeProps> = (props) => {
           classList={{ mask: props.mask, 'mask-squircle': props.mask }}
         />
       </figure>
-      <div class='card-body max-w-sm content-center'>
+      <div class='card-body content-center'>
         <h2 class='card-title'>{props.name}</h2>
         <p>{props.description}</p>
       </div>

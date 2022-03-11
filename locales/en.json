@@ -1,0 +1,12 @@
+{
+  "welcome": {
+    "bang": "Welcome",
+    "title": "to computer science and enginering at Chalmers!",
+    "portal": "This is the Dtek portal, containing useful links and infromation about studen life at chalmers. Here you can read about upcomming events, find out whats for lunch and much more.",
+    "division": "Datateknologssektionen is a non-profit organisation whos mission is to improve student life for all studens in the computer science and enginering program. We organize the opening weeks for new studens, thow parties, bring student feedback to Chalmers and lots more."
+  },
+  "committees": {
+    "greet": "Meet the Committees",
+    "get-to-know": "Get to know all the wonderfull student run committees that help improve the quality of your education when studying and having lots of fun when you're not."
+  }
+}

@@ -34,6 +34,7 @@
     "vite-plugin-solid": "^2.2.5"
   },
   "dependencies": {
+    "@amoutonbrady/solid-i18n": "^0.4.0",
     "@felte/solid": "^1.0.2",
     "@solid-primitives/refs": "^0.0.102",
     "dompurify": "^2.3.6",
