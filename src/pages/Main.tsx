@@ -2,12 +2,11 @@ import { useI18n } from '@amoutonbrady/solid-i18n';
 import type { Component } from 'solid-js';
 import { For, createResource } from 'solid-js';
 import { fetchCommittees } from '../api';
-import { Committee } from '../Committee';
-import { Committees } from '../Committees';
-import { Menu } from '../Menu';
-import { NewsList } from '../NewsList';
-import { SectionHeader } from '../Section';
-import { Welcome } from '../Welcome';
+import { Committee } from '../components/Committee';
+import { Menu } from '../components/Menu';
+import { NewsList } from '../components/NewsList';
+import { SectionHeader } from '../components/Section';
+import { Welcome } from '../components/Welcome';
 
 const Main: Component = () => {
   const [t] = useI18n();

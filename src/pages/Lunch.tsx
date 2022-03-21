@@ -1,5 +1,5 @@
 import type { Component } from 'solid-js';
-import { Menu } from '../Menu';
+import { Menu } from '../components/Menu';
 
 const Lunch: Component = () => {
   return (

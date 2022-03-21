@@ -1,4 +1,5 @@
-import type { CommitteeProps } from './Committee';
+import { Configuration, V0alpha2Api } from '@ory/kratos-client';
+import type { CommitteeProps } from './components/Committee';
 
 export interface News {
   title: string;
@@ -16,10 +17,10 @@ export interface Dish {
   emmissions?: number;
 }
 
-const baseUrl = import.meta.env.VITE_API_URL;
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export async function fetchNews(): Promise<News[]> {
-  const url = new URL('/news', baseUrl);
+  const url = new URL('/api/news', apiUrl);
   const response = await fetch(url.toString());
   const news = (await response.json()) as News[];
 
@@ -32,7 +33,7 @@ export async function fetchNews(): Promise<News[]> {
 }
 
 export async function addNews(news: News): Promise<void> {
-  const url = new URL('/news', baseUrl);
+  const url = new URL('/api/news', apiUrl);
   await fetch(url.toString(), {
     method: 'POST',
     headers: {
@@ -43,7 +44,7 @@ export async function addNews(news: News): Promise<void> {
 }
 
 export async function fetchLunch(id: string): Promise<Dish[]> {
-  const url = new URL(`/lunch`, baseUrl);
+  const url = new URL(`/api/lunch`, apiUrl);
   url.searchParams.append('name', id);
   const response = await fetch(url.toString());
   const menu = (await response.json()) as Dish[];
@@ -92,3 +93,12 @@ const committeesData: CommitteeProps[] = [
 export async function fetchCommittees(): Promise<CommitteeProps[]> {
   return Promise.resolve(committeesData);
 }
+
+export const ory = new V0alpha2Api(
+  new Configuration({
+    basePath: new URL('/auth', apiUrl).href,
+    baseOptions: {
+      withCredentials: true,
+    },
+  })
+);

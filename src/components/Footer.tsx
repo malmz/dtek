@@ -2,7 +2,7 @@ import type { Component } from 'solid-js';
 
 export const Footer: Component = () => {
   return (
-    <footer class='footer bg-base-200 p-10 text-base-content'>
+    <footer class='footer mt-auto bg-base-200 p-10 text-base-content'>
       <div>
         <img
           class='aspect-square h-14 grayscale'

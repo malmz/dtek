@@ -1,6 +1,6 @@
 import { createResource, ErrorBoundary, For, Show, Suspense } from 'solid-js';
 import type { Component } from 'solid-js';
-import { fetchLunch } from './api';
+import { fetchLunch } from '../api';
 
 export const Menu: Component<{ title: string; name: string }> = (props) => {
   const [menu] = createResource(() => props.name, fetchLunch);

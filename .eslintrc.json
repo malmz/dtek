@@ -40,6 +40,7 @@
     ],
     "no-console": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
-    "multiline-comment-style": "off"
+    "multiline-comment-style": "off",
+    "no-shadow": "off"
   }
 }

@@ -3,7 +3,6 @@ import type { Component } from 'solid-js';
 import { For } from 'solid-js';
 
 // import styles from './Navbar.module.css';
-import './Navbar.css';
 
 export const Navbar: Component = () => {
   /*
