@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { createForm } from '@felte/solid';
-import type { SubmitSelfServiceLoginFlowBody } from '@ory/kratos-client';
+import type {
+  SelfServiceLoginFlow,
+  SubmitSelfServiceLoginFlowBody,
+} from '@ory/kratos-client';
 import type { AxiosError } from 'axios';
 import { useNavigate, useSearchParams } from 'solid-app-router';
 import type { Component } from 'solid-js';
@@ -18,41 +21,55 @@ import { Flow } from '../components/Flow';
 const Login: Component = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+
   const refresh = () => Boolean(searchParams.refresh);
   const aal = () => searchParams.aal;
   const returnTo = () => searchParams.return_to;
-  const [flowId, setFlowId] = createSignal('');
-  const resetFlowId = () => setFlowId(searchParams.flow ?? '');
+  const flowId = () => searchParams.flow ?? '';
 
-  onMount(() => {
-    resetFlowId();
-  });
-
-  const [flow, { refetch, mutate }] = createResource(flowId, async (id) => {
+  const [flow, { refetch, mutate }] = createResource<
+    SelfServiceLoginFlow | undefined,
+    string
+  >(flowId, async (id, { value }) => {
+    if (id === value?.id) {
+      return value;
+    }
     try {
-      if (id !== '') {
-        const res = await ory.getSelfServiceLoginFlow(id);
-        return res.data;
-      }
+      const fetcher =
+        id !== ''
+          ? // We are in a flow already
+            ory.getSelfServiceLoginFlow(id)
+          : // Create a new flow
+            ory.initializeSelfServiceLoginFlowForBrowsers(
+              refresh(),
+              aal(),
+              returnTo()
+            );
 
-      const res = await ory.initializeSelfServiceLoginFlowForBrowsers(
-        refresh(),
-        aal(),
-        returnTo()
-      );
+      const res = await fetcher;
 
       return res.data;
     } catch (error) {
-      console.error(error);
+      /* console.error(error);
       if (id !== '') {
-        // eslint-disable-next-line no-use-before-define
-        reset();
-      }
+        setSearchParams({
+          flow: undefined,
+          refresh: undefined,
+          aal: undefined,
+          // eslint-disable-next-line camelcase
+          return_to: undefined,
+        });
+      } */
+      // eslint-disable-next-line no-use-before-define
+      handleError(error as AxiosError);
       return undefined;
     }
   });
 
   const reset = () => {
+    if (flowId() === '') {
+      refetch();
+    }
     setSearchParams({
       flow: undefined,
       refresh: undefined,
@@ -60,8 +77,6 @@ const Login: Component = () => {
       // eslint-disable-next-line camelcase
       return_to: undefined,
     });
-    resetFlowId();
-    refetch();
   };
 
   const handleError = (err: AxiosError) => {

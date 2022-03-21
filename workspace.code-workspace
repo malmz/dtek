@@ -1,0 +1,21 @@
+{
+  "folders": [
+    {
+      "path": "."
+    },
+    {
+      "path": "frontend"
+    },
+    {
+      "path": "backend"
+    }
+  ],
+  "settings": {
+    "i18n-ally.keystyle": "nested",
+    "i18n-ally.localesPaths": ["frontend/locales"],
+    "files.exclude": {
+      "frontend": true,
+      "backend": true
+    }
+  }
+}
