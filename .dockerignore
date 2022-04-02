@@ -1,0 +1,17 @@
+**/.dockerignore
+**/.env
+**/.git
+**/.gitignore
+**/.vscode
+**/docker-compose*
+**/Dockerfile*
+**/node_modules
+**/dist
+**/.editorconfig
+**/.eslintrc*
+**/.prettierrc*
+**/.prettierignore
+
+**/LICENSE
+
+**/README.md

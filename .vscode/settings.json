@@ -1,5 +1,3 @@
 {
-  "i18n-ally.localesPaths": "locales",
-  "i18n-ally.locale": "en",
-  "i18n-ally.keystyle": "nested"
+    "typescript.tsdk": "node_modules/typescript/lib"
 }

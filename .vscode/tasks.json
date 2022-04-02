@@ -1,0 +1,66 @@
+{
+  "tasks": [
+    {
+      "type": "typescript",
+      "tsconfig": "packages/backend/tsconfig.json",
+      "problemMatcher": ["$tsc"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "label": "tsc build"
+    },
+    {
+      "type": "typescript",
+      "tsconfig": "packages/backend/tsconfig.json",
+      "option": "watch",
+      "problemMatcher": ["$tsc-watch"],
+      "group": "build",
+      "label": "tsc: watch"
+    },
+    {
+      "type": "docker-build",
+      "label": "Build Backend",
+      "platform": "node",
+      "dockerBuild": {
+        "dockerfile": "${workspaceFolder}/packages/backend/Dockerfile",
+        "context": "${workspaceFolder}",
+        "pull": true
+      },
+      "node": {
+        "package": "${workspaceFolder}/packages/backend/package.json"
+      }
+    },
+    {
+      "type": "docker-build",
+      "label": "Build Frontend",
+      "platform": "node",
+      "dockerBuild": {
+        "dockerfile": "${workspaceFolder}/packages/frontend/Dockerfile",
+        "context": "${workspaceFolder}",
+        "pull": true
+      },
+      "node": {
+        "package": "${workspaceFolder}/packages/frontend/package.json"
+      }
+    },
+    {
+      "type": "docker-run",
+      "label": "Run Backend",
+      "dependsOn": ["docker-build"],
+      "platform": "node",
+      "node": {
+        "package": "${workspaceFolder}/packages/backend/package.json"
+      }
+    },
+    {
+      "type": "docker-run",
+      "label": "Run Frontend",
+      "dependsOn": ["docker-build"],
+      "platform": "node",
+      "node": {
+        "package": "${workspaceFolder}/packages/frontend/package.json"
+      }
+    }
+  ]
+}

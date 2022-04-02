@@ -1,0 +1,8 @@
+FROM node:17-alpine
+WORKDIR /usr/src/app/packages/frontend
+
+ENV NODE_ENV=development
+
+EXPOSE 80
+
+CMD [ "npm", "start", "--host", "--port", "80" ]

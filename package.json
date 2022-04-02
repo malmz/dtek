@@ -1,0 +1,29 @@
+{
+  "name": "dtek",
+  "author": {
+    "email": "callem217@gmail.com",
+    "name": "Carl Malmz",
+    "url": "https://github.com/Malmz"
+  },
+  "scripts": {
+    "frontend": "npm start -w frontend -- --host",
+    "backend": "npm start -w backend"
+  },
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.16.0",
+    "@typescript-eslint/parser": "^5.16.0",
+    "eslint": "^8.12.0",
+    "eslint-config-prettier": "^8.5.0",
+    "prettier": "^2.6.1",
+    "prettier-plugin-tailwindcss": "^0.1.8",
+    "typescript": "^4.6.3"
+  },
+  "workspaces": [
+    "packages/backend",
+    "packages/frontend",
+    "packages/linsen-pdf-extractor"
+  ]
+}

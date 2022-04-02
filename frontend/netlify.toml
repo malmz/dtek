@@ -1,6 +1,0 @@
-
-# Redirect all paths to the root. This lets the SPA handle routing.
-[[redirects]]
-from = "/*"
-to = "/index.html"
-status = 200

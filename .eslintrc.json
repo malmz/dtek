@@ -1,46 +1,13 @@
 {
-  "env": {
-    "browser": true,
-    "es2021": true
-  },
+  "root": true,
   "extends": [
-    //"eslint:recommended",
+    "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier",
-    "plugin:prettier/recommended",
-    "@solid/eslint-config-base"
+    "prettier"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "project": "./tsconfig.json",
-    "ecmaVersion": "latest",
-    "sourceType": "module",
-    "ecmaFeatures": {
-      "jsx": true
-    }
+    "project": ["./tsconfig.json", "./packages/*/tsconfig.json"]
   },
-  "plugins": ["@typescript-eslint"],
-  "rules": {
-    "@typescript-eslint/naming-convention": [
-      "warn",
-      {
-        "selector": "function",
-        "format": ["PascalCase", "camelCase"]
-      }
-    ],
-    "import/no-unresolved": "off",
-    "import/no-default-export": "off",
-    "@typescript-eslint/no-unused-vars": [
-      "warn",
-      {
-        "vars": "all",
-        "args": "after-used",
-        "ignoreRestSiblings": false
-      }
-    ],
-    "no-console": "off",
-    "@typescript-eslint/no-non-null-assertion": "off",
-    "multiline-comment-style": "off",
-    "no-shadow": "off"
-  }
+  "plugins": ["@typescript-eslint"]
 }
