@@ -34,7 +34,7 @@ const plugin: FastifyPluginAsync = async (app) => {
     async (req) => {
       const { name, lang, date } = req.query;
       try {
-        const data = await lunch.getByResturantAndDay(app.pg, {
+        const data = await lunch.getByResturantAndDay({
           resturant: name,
           lang,
           date: date ? new Date(date) : getLunchDate(),

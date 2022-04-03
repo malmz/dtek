@@ -34,7 +34,7 @@ const plugin: FastifyPluginAsync = async (app) => {
     '/',
     { schema: getSchema },
     async (req) => {
-      return { news: await news.getByDate(app.pg, req.query) };
+      return { news: await news.getByDate(req.query) };
     }
   );
 
@@ -43,7 +43,7 @@ const plugin: FastifyPluginAsync = async (app) => {
     { schema: postSchema },
     async (req) => {
       const { body } = req;
-      await news.create(app.pg, body);
+      await news.create(body);
     }
   );
 };

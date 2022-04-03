@@ -2,6 +2,7 @@ import { isAfter } from 'date-fns';
 import fp from 'fastify-plugin';
 import schedule from 'node-schedule';
 import { lunch } from '../db/index.js';
+import { logger } from '../logger.js';
 import * as karen from './karen.js';
 import * as linsen from './linsen.js';
 
@@ -22,75 +23,73 @@ const karenResturants = [
   ['smak', '3ac68e11-bcee-425e-d2a8-08d558129279'],
 ];
 
-export default fp((app) => {
-  schedule.scheduleJob('monday-lunch-sync', onMonday, async () => {
-    app.log.debug('Fetching this weeks meny');
-    const tasks: (() => Promise<void>)[] = [];
+schedule.scheduleJob('monday-lunch-sync', onMonday, async () => {
+  logger.debug('Fetching this weeks meny');
+  const tasks: (() => Promise<void>)[] = [];
 
+  tasks.push(async () => {
+    try {
+      logger.debug(`Fetching 'linsen'...`);
+      const lastDate = await lunch.getLastDate('linsen');
+      if (isAfter(new Date(), lastDate)) {
+        lunch.create(await linsen.fetchCurrentWeek());
+        logger.debug(`Done fetching 'linsen'`);
+      } else {
+        logger.debug(`Done fetching 'linsen', already up-to-date`);
+      }
+    } catch (error) {
+      logger.error(
+        `Error fetching 'linsen', error: ${(error as Error).message}`
+      );
+    }
+  });
+
+  for (const [name, id] of karenResturants) {
     tasks.push(async () => {
       try {
-        app.log.debug(`Fetching 'linsen'...`);
-        const lastDate = await lunch.getLastDate(app.pg, 'linsen');
+        logger.debug(`Fetching '${name}'...`);
+        const lastDate = await lunch.getLastDate(name);
         if (isAfter(new Date(), lastDate)) {
-          lunch.create(app.pg, await linsen.fetchCurrentWeek());
-          app.log.debug(`Done fetching 'linsen'`);
+          lunch.create(await karen.fetchCurrentWeek(name, id));
+          logger.debug(`Done fetching '${name}'`);
         } else {
-          app.log.debug(`Done fetching 'linsen', already up-to-date`);
+          logger.debug(`Done fetching '${name}', already up-to-date`);
         }
       } catch (error) {
-        app.log.error(
-          `Error fetching 'linsen', error: ${(error as Error).message}`
+        logger.error(
+          `Error fetching '${name}', error: ${(error as Error).message}`
         );
       }
     });
+  }
 
-    for (const [name, id] of karenResturants) {
-      tasks.push(async () => {
-        try {
-          app.log.debug(`Fetching '${name}'...`);
-          const lastDate = await lunch.getLastDate(app.pg, name);
-          if (isAfter(new Date(), lastDate)) {
-            lunch.create(app.pg, await karen.fetchCurrentWeek(name, id));
-            app.log.debug(`Done fetching '${name}'`);
-          } else {
-            app.log.debug(`Done fetching '${name}', already up-to-date`);
-          }
-        } catch (error) {
-          app.log.error(
-            `Error fetching '${name}', error: ${(error as Error).message}`
-          );
+  await Promise.all(tasks.map((task) => task()));
+  logger.debug('Done fetching this weeks meny');
+});
+
+schedule.scheduleJob('friday-lunch-sync', onFriday, async () => {
+  logger.debug('Fetching next weeks meny');
+  const tasks: (() => Promise<void>)[] = [];
+
+  for (const [name, id] of karenResturants) {
+    tasks.push(async () => {
+      try {
+        logger.debug(`Fetching '${name}'...`);
+        const lastDate = await lunch.getLastDate(name);
+        if (isAfter(new Date(), lastDate)) {
+          lunch.create(await karen.fetchNextWeek(name, id));
+          logger.debug(`Done fetching '${name}'`);
+        } else {
+          logger.debug(`Done fetching '${name}', already up-to-date`);
         }
-      });
-    }
+      } catch (error) {
+        logger.error(
+          `Error fetching '${name}', error: ${(error as Error).message}`
+        );
+      }
+    });
+  }
 
-    await Promise.all(tasks.map((task) => task()));
-    app.log.debug('Done fetching this weeks meny');
-  });
-
-  schedule.scheduleJob('friday-lunch-sync', onFriday, async () => {
-    app.log.debug('Fetching next weeks meny');
-    const tasks: (() => Promise<void>)[] = [];
-
-    for (const [name, id] of karenResturants) {
-      tasks.push(async () => {
-        try {
-          app.log.debug(`Fetching '${name}'...`);
-          const lastDate = await lunch.getLastDate(app.pg, name);
-          if (isAfter(new Date(), lastDate)) {
-            lunch.create(app.pg, await karen.fetchNextWeek(name, id));
-            app.log.debug(`Done fetching '${name}'`);
-          } else {
-            app.log.debug(`Done fetching '${name}', already up-to-date`);
-          }
-        } catch (error) {
-          app.log.error(
-            `Error fetching '${name}', error: ${(error as Error).message}`
-          );
-        }
-      });
-    }
-
-    await Promise.all(tasks.map((task) => task()));
-    app.log.debug('Done fetching next weeks meny');
-  });
+  await Promise.all(tasks.map((task) => task()));
+  logger.debug('Done fetching next weeks meny');
 });

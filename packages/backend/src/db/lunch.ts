@@ -1,5 +1,5 @@
-import { PostgresDb } from 'fastify-postgres';
 import SQL from 'sql-template-strings';
+import { query } from './index.js';
 
 export type Model = {
   id: number;
@@ -11,30 +11,24 @@ export type Model = {
   body: string;
 };
 
-export async function getByResturantAndDay(
-  db: PostgresDb,
-  params: {
-    resturant: string;
-    date: Date;
-    lang?: string;
-  }
-): Promise<Model[]> {
-  const query = SQL`
+export async function getByResturantAndDay(params: {
+  resturant: string;
+  date: Date;
+  lang?: string;
+}): Promise<Model[]> {
+  const statement = SQL`
     SELECT preformatted, title, body
     FROM dtek_lunch
     WHERE resturant = ${params.resturant}
     AND lang = ${params.lang ?? 'Swedish'}
     AND for_date = ${params.date}
   `;
-  const result = await db.query<Model>(query);
+  const result = await query<Model>(statement);
   return result.rows;
 }
 
-export async function getLastDate(
-  db: PostgresDb,
-  resturant: string
-): Promise<Date> {
-  const data = await db.query<{ for_date: Date }>(SQL`
+export async function getLastDate(resturant: string): Promise<Date> {
+  const data = await query<{ for_date: Date }>(SQL`
     SELECT for_date
     FROM dtek_lunch
     WHERE resturant = ${resturant}
@@ -53,14 +47,14 @@ export type Create = {
   body: string;
 };
 
-export async function create(db: PostgresDb, dishes: Create[]): Promise<void> {
-  const query = SQL`INSERT INTO dtek_lunch (resturant, for_date, lang, preformatted, title, body)`;
+export async function create(dishes: Create[]): Promise<void> {
+  const statement = SQL`INSERT INTO dtek_lunch (resturant, for_date, lang, preformatted, title, body)`;
   for (const dish of dishes) {
-    query.append(SQL`
+    statement.append(SQL`
       VALUES (${dish.resturant}, ${dish.for_date} ${dish.lang}, ${
       dish.preformatted ?? false
     }, ${dish.title}, ${dish.body})
     `);
   }
-  await db.query(query);
+  await query(statement);
 }

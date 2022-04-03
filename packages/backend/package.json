@@ -36,6 +36,7 @@
     "node-schedule": "^2.1.0",
     "pdfjs-dist": "^2.13.216",
     "pg": "^8.7.3",
+    "pino": "^7.9.2",
     "sql-template-strings": "^2.2.2"
   }
 }
