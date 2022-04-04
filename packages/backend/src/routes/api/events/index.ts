@@ -1,6 +1,5 @@
 import { Static, Type } from '@sinclair/typebox';
 import { FastifyPluginAsync } from 'fastify';
-import { events } from '../../../db/index.js';
 
 const getSchema = {
   querystring: Type.Object({
@@ -39,7 +38,7 @@ const plugin: FastifyPluginAsync = async (app) => {
     '/',
     { schema: getSchema },
     async (req) => {
-      return { news: await events.getByDate(req.query) };
+      return { news: await app.db.events.getByDate(req.query) };
     }
   );
 
@@ -53,7 +52,7 @@ const plugin: FastifyPluginAsync = async (app) => {
         start_at: new Date(body.start_at),
         end_at: new Date(body.end_at),
       };
-      await events.create(data);
+      await app.db.events.create(data);
     }
   );
 };

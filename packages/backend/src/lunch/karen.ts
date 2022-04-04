@@ -6,6 +6,7 @@ import {
   startOfISOWeek,
 } from 'date-fns';
 import { lunch } from '../db/index.js';
+import fetch from 'node-fetch';
 
 interface DishOccurrence {
   startDate: string;
@@ -60,7 +61,7 @@ async function fetchApi(
       signal: ab.signal,
     });
     clearTimeout(t);
-    return await response.json();
+    return (await response.json()) as DishOccurrence[];
   } catch (error) {
     throw new Error('Failed to fetch menu', { cause: error as Error });
   }

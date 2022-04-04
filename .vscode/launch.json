@@ -28,7 +28,8 @@
       "runtimeArgs": ["start"],
       "cwd": "${workspaceFolder}/packages/backend",
       "skipFiles": ["<node_internals>/**"],
-      "outFiles": ["${workspaceFolder}/packages/backend/dist/**/*.js"]
+      "outFiles": ["${workspaceFolder}/packages/backend/dist/**/*.js"],
+      "outputCapture": "std"
     }
   ]
 }
