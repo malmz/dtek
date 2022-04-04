@@ -23,7 +23,6 @@
   },
   "workspaces": [
     "packages/backend",
-    "packages/frontend",
-    "packages/linsen-pdf-extractor"
+    "packages/frontend"
   ]
 }
