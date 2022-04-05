@@ -1,46 +1,29 @@
-import { PostgresDb } from 'fastify-postgres';
-import SQL from 'sql-template-strings';
+import { Knex } from 'knex';
+import { News } from 'knex/types/tables';
 import { applyOptions, Options } from './index.js';
 
-export type Model = {
-  id: number;
-  title: string;
-  body: string;
-  created_at: Date;
-  updated_at: Date;
-};
+export class NewsController {
+  constructor(private knex: Knex) {}
 
-export type Create = {
-  title: string;
-  body: string;
-};
-
-export class News {
-  constructor(private db: PostgresDb) {}
-
-  async getByDate(opts: Options = {}): Promise<Model[]> {
-    const statement = SQL`
-    SELECT id, title, body, created_at, updated_at
-    FROM dtek_news
-    ORDER BY updated_at DESC
-  `;
-    applyOptions(statement, opts);
-    const result = await this.db.query<Model>(statement);
-    return result.rows;
+  async getByDate(opts: Options = {}): Promise<News[]> {
+    const query = this.knex('news')
+      .select(['id', 'title', 'body', 'created_at', 'updated_at'])
+      .orderBy('updated_at', 'desc');
+    applyOptions(query, opts);
+    return await query;
   }
 
-  async getAll(): Promise<Model[]> {
-    const result = await this.db.query<Model>(SQL`
-    SELECT id, title, body, created_at, updated_at
-    FROM dtek_news
-  `);
-    return result.rows;
+  async getAll(): Promise<News[]> {
+    return await this.knex('dtek_news').select([
+      'id',
+      'title',
+      'body',
+      'created_at',
+      'updated_at',
+    ]);
   }
 
-  async create(news: Create): Promise<void> {
-    await this.db.query(SQL`
-    INSERT INTO dtek_news (title, body)
-    VALUES (${news.title}, ${news.body})
-  `);
+  async create(news: News[]): Promise<void> {
+    await this.knex('dtek_news').insert(news);
   }
 }

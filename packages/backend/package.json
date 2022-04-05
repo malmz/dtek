@@ -8,7 +8,8 @@
     "build": "tsc",
     "start": "node dist/main.js",
     "dev": "fastify start -w -l info -P dist/app.js",
-    "migrate": "node-pg-migrate"
+    "migrate": "node-pg-migrate",
+    "knex": "knex --knexfile=./knexfile.mjs"
   },
   "author": "",
   "license": "ISC",
@@ -28,16 +29,13 @@
     "fastify": "^3.27.4",
     "fastify-autoload": "^3.10.0",
     "fastify-cors": "^6.0.3",
-    "fastify-knexjs": "^1.4.0",
     "fastify-plugin": "^3.0.0",
-    "fastify-postgres": "^3.6.0",
     "fastify-sensible": "^3.1.2",
+    "knex": "^1.0.4",
+    "knex-paginate": "^3.0.0",
     "node-fetch": "^3.2.3",
-    "node-pg-migrate": "^6.2.1",
     "node-schedule": "^2.1.0",
     "pdfjs-dist": "^2.13.216",
-    "pg": "^8.7.3",
-    "pino": "^7.9.2",
-    "sql-template-strings": "^2.2.2"
+    "pg": "^8.7.3"
   }
 }

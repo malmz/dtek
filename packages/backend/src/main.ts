@@ -1,7 +1,6 @@
 import 'dotenv/config';
 import fastify from 'fastify';
 import closeWithGrace from 'close-with-grace';
-import SQL from 'sql-template-strings';
 const development = process.env.NODE_ENV === 'development';
 
 const dishes = [
@@ -14,16 +13,6 @@ const dishes = [
     body: 'test',
   },
 ];
-
-const statement = SQL`INSERT INTO dtek_lunch (resturant, for_date, lang, preformatted, title, body)`;
-for (const dish of dishes) {
-  statement.append(
-    SQL`VALUES (${dish.resturant}, ${dish.for_date}, ${dish.lang}, ${
-      dish.preformatted ?? false
-    }, ${dish.title}, ${dish.body})`
-  );
-}
-console.log(statement.text);
 
 // Instantiate Fastify with some config
 const app = fastify({

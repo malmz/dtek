@@ -1,6 +1,5 @@
 import { Static, Type } from '@sinclair/typebox';
 import { FastifyPluginAsync } from 'fastify';
-import SQL from 'sql-template-strings';
 import { getLunchDate } from '../../../date.js';
 
 const getSchema = {
@@ -45,46 +44,6 @@ const plugin: FastifyPluginAsync = async (app) => {
       }
     }
   );
-
-  app.get('/test', async () => {
-    const dishes = [
-      {
-        resturant: 'hello',
-        for_date: new Date(),
-        lang: 'Swedish',
-        preformatted: false,
-        title: 'Hai',
-        body: 'test',
-      },
-      {
-        resturant: 'hello2',
-        for_date: new Date(),
-        lang: 'Swedish',
-        preformatted: false,
-        title: 'Hai',
-        body: 'test',
-      },
-    ];
-
-    const statement = SQL`INSERT INTO dtek_lunch (resturant, for_date, lang, preformatted, title, body) VALUES`;
-    for (const dish of dishes.slice(0, -1)) {
-      statement.append(
-        SQL` (${dish.resturant}, ${dish.for_date}, ${dish.lang}, ${
-          dish.preformatted ?? false
-        }, ${dish.title}, ${dish.body}),`
-      );
-    }
-    const dish = dishes[dishes.length - 1];
-    statement.append(
-      SQL` (${dish.resturant}, ${dish.for_date}, ${dish.lang}, ${
-        dish.preformatted ?? false
-      }, ${dish.title}, ${dish.body})`
-    );
-    app.log.debug(statement.text);
-    app.pg.query(statement);
-
-    return {};
-  });
 };
 
 export default plugin;

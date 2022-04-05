@@ -1,5 +1,6 @@
-import SQL from 'sql-template-strings';
-import { PostgresDb } from 'fastify-postgres';
+import { Knex } from 'knex';
+
+declare module 'knex/types/tables' {}
 
 export type Model = {
   id: number;
@@ -21,49 +22,34 @@ export type Create = {
 };
 
 export class Lunch {
-  constructor(private db: PostgresDb) {}
+  constructor(private knex: Knex) {}
 
   async getByResturantAndDay(params: {
     resturant: string;
     date: Date;
     lang?: string;
   }): Promise<Model[]> {
-    const statement = SQL`
-    SELECT preformatted, title, body
-    FROM dtek_lunch
-    WHERE resturant = ${params.resturant}
-    AND lang = ${params.lang ?? 'Swedish'}
-    AND for_date = ${params.date}
-  `;
-    const result = await this.db.query<Model>(statement);
-    return result.rows;
+    return await this.knex('dtek_lunch')
+      .select(['preformatted', 'title', 'body'])
+      .where('resturant', params.resturant)
+      .andWhere('lang', params.lang ?? 'Swedish')
+      .andWhere('for_date', params.date);
   }
 
   async getLastDate(resturant: string): Promise<Date> {
-    const data = await this.db.query<{ for_date: Date }>(SQL`
-        SELECT for_date
-        FROM dtek_lunch
-        WHERE resturant = ${resturant}
-        ORDER BY for_date DESC
-        LIMIT 1
-      `);
-    if (data.rowCount === 0) {
+    const data = await this.knex('dtek_lunch')
+      .select('for_date')
+      .where('resturant', resturant)
+      .orderBy('for_date', 'desc')
+      .limit(1);
+
+    if (data.length === 0) {
       return new Date(0);
     }
-    return data.rows[0].for_date;
+    return data[0].for_date;
   }
 
   async create(dishes: Create[]): Promise<void> {
-    const statement = SQL`INSERT INTO dtek_lunch (resturant, for_date, lang, preformatted, title, body)`;
-    for (const dish of dishes) {
-      statement.append(SQL`
-        VALUES (${dish.resturant}, ${dish.for_date}, ${dish.lang}, ${
-        dish.preformatted ?? false
-      }, ${dish.title}, ${dish.body})
-      `);
-    }
-    console.log(statement.text);
-
-    await this.db.query(statement);
+    await this.knex('dtek_lunch').insert(dishes);
   }
 }

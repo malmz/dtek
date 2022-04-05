@@ -52,7 +52,7 @@ const plugin: FastifyPluginAsync = async (app) => {
         start_at: new Date(body.start_at),
         end_at: new Date(body.end_at),
       };
-      await app.db.events.create(data);
+      await app.db.events.create([data]);
     }
   );
 };

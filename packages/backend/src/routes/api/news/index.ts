@@ -3,8 +3,8 @@ import { FastifyPluginAsync } from 'fastify';
 
 const getSchema = {
   querystring: Type.Object({
-    count: Type.Optional(Type.Number()),
-    offset: Type.Optional(Type.Number()),
+    per_page: Type.Number({ default: 10 }),
+    current_page: Type.Number({ default: 1 }),
   }),
   response: {
     200: Type.Object({
@@ -33,7 +33,16 @@ const plugin: FastifyPluginAsync = async (app) => {
     '/',
     { schema: getSchema },
     async (req) => {
-      return { news: await app.db.news.getByDate(req.query) };
+      return {
+        news: await app
+          .knex('news')
+          .select()
+          .orderBy('updated_at', 'desc')
+          .paginate({
+            perPage: req.query.per_page,
+            currentPage: req.query.current_page,
+          }),
+      };
     }
   );
 
@@ -42,7 +51,7 @@ const plugin: FastifyPluginAsync = async (app) => {
     { schema: postSchema },
     async (req) => {
       const { body } = req;
-      await app.db.news.create(body);
+      await app.knex('news').insert([body]);
     }
   );
 };
