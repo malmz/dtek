@@ -33,15 +33,17 @@ const plugin: FastifyPluginAsync = async (app) => {
     '/',
     { schema: getSchema },
     async (req) => {
+      const data = await app
+        .knex('news')
+        .select()
+        .orderBy('updated_at', 'desc')
+        .paginate({
+          perPage: req.query.per_page,
+          currentPage: req.query.current_page,
+        });
+
       return {
-        news: await app
-          .knex('news')
-          .select()
-          .orderBy('updated_at', 'desc')
-          .paginate({
-            perPage: req.query.per_page,
-            currentPage: req.query.current_page,
-          }),
+        news: data.data,
       };
     }
   );

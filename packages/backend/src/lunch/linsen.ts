@@ -5,10 +5,14 @@
  */
 
 import fetch from 'node-fetch';
-import { lunch } from '../db/index.js';
 import pdfjs from 'pdfjs-dist';
 import { TextItem } from 'pdfjs-dist/types/src/display/api';
 import { setISODay, setISOWeek, startOfISOWeek } from 'date-fns';
+import { LunchInsert, MenuItemInsert } from 'knex/types/tables';
+import {
+  fetchCurrentWeek as karenCurrentWeek,
+  fetchNextWeek as karenNextWeek,
+} from './karen.js';
 
 const pdfUrl = 'http://www.cafelinsen.se/menyer/cafe-linsen-lunch-meny.pdf';
 
@@ -51,7 +55,11 @@ function parseWeekString(str: string): Day {
 const weekReg = /^Cafè Linsen Vecka (\d+)$/;
 const dayReg = /^(Måndag|Tisdag|Onsdag|Torsdag|Fredag|Lördag|Söndag):\s+(.+)/;
 
-async function parsePdf(buffer: ArrayBuffer): Promise<lunch.Create[]> {
+async function parsePdf(
+  buffer: ArrayBuffer
+): Promise<
+  { lunch: LunchInsert; menu_item: Omit<MenuItemInsert, 'lunch_id'>[] }[]
+> {
   const pdf = await pdfjs.getDocument(new Uint8Array(buffer)).promise;
 
   const lines: string[] = [];
@@ -73,7 +81,10 @@ async function parsePdf(buffer: ArrayBuffer): Promise<lunch.Create[]> {
     }
   }
 
-  const dishes: lunch.Create[] = [];
+  const dishes: {
+    lunch: LunchInsert;
+    menu_item: Omit<MenuItemInsert, 'lunch_id'>[];
+  }[] = [];
 
   const week = parseInt(lines[0].match(weekReg)?.[1] ?? '', 10);
   const weekDate = startOfISOWeek(setISOWeek(new Date(), week));
@@ -84,13 +95,21 @@ async function parsePdf(buffer: ArrayBuffer): Promise<lunch.Create[]> {
   for (const line of lines.splice(1)) {
     const dayMatch = line.match(dayReg);
     if (dayMatch) {
-      dishes.push({
-        resturant: 'linsen',
-        body: currentDayString,
-        for_date: currentDate,
-        preformatted: true,
-        lang: 'Swedish',
-      });
+      if (currentDayString !== '') {
+        dishes.push({
+          lunch: {
+            resturant: 'linsen',
+            for_date: currentDate,
+            preformatted: true,
+            lang: 'Both',
+          },
+          menu_item: [
+            {
+              body: currentDayString,
+            },
+          ],
+        });
+      }
       currentDate = setISODay(weekDate, parseWeekString(dayMatch[1]));
       currentDayString = dayMatch[2];
     } else {
@@ -98,17 +117,53 @@ async function parsePdf(buffer: ArrayBuffer): Promise<lunch.Create[]> {
     }
   }
   dishes.push({
-    resturant: 'linsen',
-    body: currentDayString,
-    for_date: currentDate,
-    preformatted: true,
-    lang: 'Swedish',
+    lunch: {
+      resturant: 'linsen',
+      for_date: currentDate,
+      preformatted: true,
+      lang: 'Both',
+    },
+    menu_item: [
+      {
+        body: currentDayString,
+      },
+    ],
   });
 
   return dishes;
 }
 
-export async function fetchCurrentWeek(): Promise<lunch.Create[]> {
-  const data = await fetchPdf();
-  return await parsePdf(data);
+export async function fetchCurrentWeek(): Promise<
+  { lunch: LunchInsert; menu_item: Omit<MenuItemInsert, 'lunch_id'>[] }[]
+> {
+  try {
+    const data = await karenCurrentWeek(
+      'linsen',
+      'b672efaf-032a-4bb8-d2a5-08d558129279'
+    );
+    data.forEach((lunch) => {
+      lunch.menu_item.forEach((item) => {
+        item.title = undefined;
+      });
+    });
+    return data;
+  } catch (error) {
+    const data = await fetchPdf();
+    return await parsePdf(data);
+  }
+}
+
+export async function fetchNextWeek(): Promise<
+  { lunch: LunchInsert; menu_item: Omit<MenuItemInsert, 'lunch_id'>[] }[]
+> {
+  const data = await karenNextWeek(
+    'linsen',
+    'b672efaf-032a-4bb8-d2a5-08d558129279'
+  );
+  data.forEach((lunch) => {
+    lunch.menu_item.forEach((item) => {
+      item.title = undefined;
+    });
+  });
+  return data;
 }

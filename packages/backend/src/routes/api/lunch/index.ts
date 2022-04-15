@@ -4,14 +4,18 @@ import { getLunchDate } from '../../../date.js';
 
 const getSchema = {
   querystring: Type.Object({
-    name: Type.String(),
+    resturant: Type.String(),
     lang: Type.KeyOf(
-      Type.Object({ Swedish: Type.String(), English: Type.String() }),
-      { default: 'Swedish' }
+      Type.Object({
+        Swedish: Type.String(),
+        English: Type.String(),
+        Both: Type.String(),
+      }),
+      { default: 'Both' }
     ),
     date: Type.Optional(Type.String()),
   }),
-  response: {
+  /* response: {
     200: Type.Object({
       dishes: Type.Array(
         Type.Object({
@@ -23,7 +27,7 @@ const getSchema = {
       ),
       preformatted: Type.String(),
     }),
-  },
+  }, */
 } as const;
 
 const plugin: FastifyPluginAsync = async (app) => {
@@ -31,16 +35,24 @@ const plugin: FastifyPluginAsync = async (app) => {
     '/',
     { schema: getSchema },
     async (req) => {
-      const { name, lang, date } = req.query;
+      const { resturant, lang, date } = req.query;
+      const langList =
+        lang === 'Both' ? ['Both', 'Swedish', 'English'] : [lang, 'Both'];
       try {
-        const data = await app.db.lunch.getByResturantAndDay({
-          resturant: name,
-          lang,
-          date: date ? new Date(date) : getLunchDate(),
-        });
-        return data;
+        return {
+          dishes: await app
+            .knex('lunch')
+            .whereIn('lang', langList)
+            .andWhere({
+              resturant,
+              for_date: date ? new Date() : getLunchDate(),
+            })
+            .join('menu_item', 'lunch.id', 'menu_item.lunch_id')
+            .select('title', 'body', 'preformatted')
+            .orderBy('title'),
+        };
       } catch (error) {
-        return {};
+        return { dishes: [] };
       }
     }
   );

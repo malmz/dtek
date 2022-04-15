@@ -3,12 +3,12 @@ import { FastifyPluginAsync } from 'fastify';
 
 const getSchema = {
   querystring: Type.Object({
-    count: Type.Optional(Type.Number()),
-    offset: Type.Optional(Type.Number()),
+    per_page: Type.Number({ default: 10 }),
+    current_page: Type.Number({ default: 1 }),
   }),
   response: {
     200: Type.Object({
-      news: Type.Array(
+      events: Type.Array(
         Type.Object({
           id: Type.Number(),
           title: Type.String(),
@@ -38,7 +38,17 @@ const plugin: FastifyPluginAsync = async (app) => {
     '/',
     { schema: getSchema },
     async (req) => {
-      return { news: await app.db.events.getByDate(req.query) };
+      const data = await app
+        .knex('events')
+        .select('*')
+        .orderBy('updated_at', 'desc')
+        .paginate({
+          perPage: req.query.per_page,
+          currentPage: req.query.current_page,
+        });
+      return {
+        events: data.data,
+      };
     }
   );
 
@@ -52,7 +62,7 @@ const plugin: FastifyPluginAsync = async (app) => {
         start_at: new Date(body.start_at),
         end_at: new Date(body.end_at),
       };
-      await app.db.events.create([data]);
+      await app.knex('events').insert(data);
     }
   );
 };

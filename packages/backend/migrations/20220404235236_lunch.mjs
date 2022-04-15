@@ -24,6 +24,9 @@ export const up = async (knex) => {
 
     table.text('title');
     table.text('body').notNullable();
+    table.jsonb('allergens');
+    table.float('emission');
+    table.text('price');
   });
 };
 

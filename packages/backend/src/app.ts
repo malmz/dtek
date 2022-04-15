@@ -7,6 +7,7 @@ const server: FastifyPluginAsync = async (app, opts) => {
   app.register(AutoLoad, {
     dir: new URL('plugins', import.meta.url).pathname,
     options: { ...opts },
+    forceESM: true,
   });
 
   /* app.register(fastifyPostgres, {

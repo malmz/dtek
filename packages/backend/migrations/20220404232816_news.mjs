@@ -1,3 +1,5 @@
+import { onUpdateTrigger } from '../knexfile.mjs';
+
 /**
  *
  * @param {import('knex').Knex} knex
@@ -12,6 +14,7 @@ export const up = async (knex) => {
     table.text('body').notNullable();
     table.timestamps(true, true);
   });
+  await knex.raw(onUpdateTrigger('dtek.news'));
 };
 
 /**

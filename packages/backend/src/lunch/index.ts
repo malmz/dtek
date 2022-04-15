@@ -1,23 +1,30 @@
-import { isAfter } from 'date-fns';
+import { isAfter, isWeekend } from 'date-fns';
 import { FastifyLoggerInstance } from 'fastify';
 import fp from 'fastify-plugin';
-import { lunch } from '../db/index.js';
+import { LunchInsert, MenuItemInsert } from 'knex/types/tables';
 import * as karen from './karen.js';
 import * as linsen from './linsen.js';
 
 const createKarenFetcher = (name: string, id: string) => ({
   name,
   fetcher: () => karen.fetchCurrentWeek(name, id),
+  nextfetcher: () => karen.fetchNextWeek(name, id),
 });
 
 const createLinsenFetcher = () => ({
   name: 'linsen',
   fetcher: () => linsen.fetchCurrentWeek(),
+  nextfetcher: () => linsen.fetchNextWeek(),
 });
 
 interface Resturant {
   name: string;
-  fetcher: () => Promise<lunch.Create[]>;
+  fetcher: () => Promise<
+    { lunch: LunchInsert; menu_item: Omit<MenuItemInsert, 'lunch_id'>[] }[]
+  >;
+  nextfetcher?: () => Promise<
+    { lunch: LunchInsert; menu_item: Omit<MenuItemInsert, 'lunch_id'>[] }[]
+  >;
 }
 
 const karenResturants: Resturant[] = [
@@ -32,9 +39,22 @@ const karenResturants: Resturant[] = [
 
 const linsenResturants: Resturant[] = [createLinsenFetcher()];
 
-const thisWeekResturants = [...karenResturants, ...linsenResturants];
+const thisWeekResturants: Resturant[] = [
+  ...karenResturants,
+  ...linsenResturants,
+];
 
-const nextWeekResturants = [...karenResturants];
+const nextWeekResturants: Resturant[] = [
+  ...karenResturants,
+  ...linsenResturants,
+].map((rest) => ({
+  ...rest,
+  fetcher:
+    rest.nextfetcher ??
+    (async () => {
+      throw new Error('No next fetcher');
+    }),
+}));
 
 export default fp(
   async (app) => {
@@ -48,11 +68,29 @@ export default fp(
                 const log = logger.child({ name: resturant.name });
                 try {
                   log.debug('Fetching...');
-                  const lastDate = await app.db.lunch.getLastDate(
-                    resturant.name
-                  );
-                  if (isAfter(new Date(), lastDate)) {
-                    app.db.lunch.create(await resturant.fetcher());
+                  const lastDate = await app
+                    .knex('lunch')
+                    .where('resturant', resturant.name)
+                    .max('for_date');
+
+                  if (isAfter(new Date(), lastDate[0].max ?? new Date(0))) {
+                    const menus = await resturant.fetcher();
+
+                    for (const menu of menus) {
+                      await app.knex.transaction(async (trx) => {
+                        const lunch_id = await trx('lunch').insert(
+                          menu.lunch,
+                          'id'
+                        );
+
+                        await trx('menu_item').insert(
+                          menu.menu_item.map((item) => ({
+                            ...item,
+                            lunch_id: lunch_id[0].id,
+                          }))
+                        );
+                      });
+                    }
                     log.debug({ updated: true }, 'Done fetching');
                   } else {
                     log.debug({ updated: false }, 'Done fetching');
@@ -68,6 +106,7 @@ export default fp(
             })
             .map((task) => task())
         );
+        logger.debug('Done fetching weekly menu');
       };
 
     const fetchThisWeek = fetchMenus(
@@ -91,10 +130,14 @@ export default fp(
       fetchNextWeek
     );
 
-    await Promise.all([fetchThisWeek(), fetchNextWeek()]);
+    if (isWeekend(new Date())) {
+      fetchNextWeek();
+    } else {
+      fetchThisWeek();
+    }
   },
   {
     name: 'dtek-lunch',
-    dependencies: ['dtek-database', 'dtek-schedule'],
+    dependencies: ['dtek-knex', 'dtek-schedule'],
   }
 );

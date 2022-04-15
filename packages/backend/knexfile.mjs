@@ -18,3 +18,20 @@ const config = {
 };
 
 export default config;
+
+/**
+ *
+ * @param {string} table
+ * @returns {string}
+ */
+export const onUpdateTrigger = (table) => {
+  const tablePath = table.split('.');
+  const tableName = tablePath[tablePath.length - 1];
+
+  return `
+CREATE TRIGGER ${tableName}_updated_at
+BEFORE UPDATE ON ${table}
+FOR EACH ROW
+EXECUTE PROCEDURE dtek.on_update_timestamp();
+`;
+};
