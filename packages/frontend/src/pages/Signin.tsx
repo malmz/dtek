@@ -1,22 +1,18 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { createForm } from '@felte/solid';
 import type {
   SelfServiceLoginFlow,
   SubmitSelfServiceLoginFlowBody,
 } from '@ory/kratos-client';
-import type { AxiosError } from 'axios';
-import { useNavigate, useSearchParams } from 'solid-app-router';
-import type { Component } from 'solid-js';
-import {
-  createSignal,
-  onMount,
-  untrack,
-  Show,
-  Suspense,
-  createResource,
-} from 'solid-js';
+import { AxiosError } from 'axios';
+import { Link, useNavigate, useSearchParams } from 'solid-app-router';
+import { Component, Match, Switch } from 'solid-js';
+import { Show, Suspense, createResource } from 'solid-js';
 import { ory } from '../api';
 import { Flow } from '../components/Flow';
+
+function isAxiosError(error: any): error is AxiosError {
+  return (error as AxiosError).isAxiosError;
+}
 
 const Login: Component = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -35,34 +31,22 @@ const Login: Component = () => {
       return value;
     }
     try {
-      const fetcher =
-        id !== ''
-          ? // We are in a flow already
-            ory.getSelfServiceLoginFlow(id)
-          : // Create a new flow
-            ory.initializeSelfServiceLoginFlowForBrowsers(
-              refresh(),
-              aal(),
-              returnTo()
-            );
-
-      const res = await fetcher;
+      const res = await (id !== ''
+        ? // We are in a flow already
+          ory.getSelfServiceLoginFlow(id)
+        : // Create a new flow
+          ory.initializeSelfServiceLoginFlowForBrowsers(
+            refresh(),
+            aal(),
+            returnTo()
+          ));
 
       return res.data;
     } catch (error) {
-      /* console.error(error);
-      if (id !== '') {
-        setSearchParams({
-          flow: undefined,
-          refresh: undefined,
-          aal: undefined,
-          // eslint-disable-next-line camelcase
-          return_to: undefined,
-        });
-      } */
-      // eslint-disable-next-line no-use-before-define
-      handleError(error as AxiosError);
-      return undefined;
+      if (isAxiosError(error)) {
+        handleError(error);
+      }
+      throw error;
     }
   });
 
@@ -74,7 +58,6 @@ const Login: Component = () => {
       flow: undefined,
       refresh: undefined,
       aal: undefined,
-      // eslint-disable-next-line camelcase
       return_to: undefined,
     });
   };
@@ -111,7 +94,7 @@ const Login: Component = () => {
 
       case 400:
         mutate(err.response.data);
-        return;
+        break;
 
       default:
         break;
@@ -120,29 +103,26 @@ const Login: Component = () => {
     throw err;
   };
 
-  const fallback = (
-    <div>
-      <p>Error no flow</p>
-    </div>
-  );
-
   const { form, setFields } = createForm<SubmitSelfServiceLoginFlowBody>({
     onSubmit: async (v, ctx) => {
-      const flowL = flow()!;
+      const flowL = flow();
 
-      setSearchParams({ flow: flow()!.id });
+      setSearchParams({ flow: flowL?.id });
 
       try {
         const res = await ory.submitSelfServiceLoginFlow(
-          flowL.id,
+          flowL?.id ?? '',
           undefined,
           v
         );
       } catch (error) {
-        handleError(error as AxiosError);
+        if (isAxiosError(error)) {
+          handleError(error);
+        }
+        throw error;
       }
 
-      if (flowL.return_to) {
+      if (flowL?.return_to) {
         navigate(flowL.return_to);
       } else {
         navigate('/');
@@ -155,18 +135,34 @@ const Login: Component = () => {
     setFields(name as any, value);
   };
 
+  const placeholderForm = (
+    <div class='flex animate-pulse'>
+      <div class='bg-base-300 h-8 flex-1 rounded'></div>
+    </div>
+  );
+
   return (
-    <div>
-      <Suspense fallback={<div>Loading session...</div>}>
-        <Show when={flow() != null} fallback={fallback}>
-          <div class='card m-8 mx-auto max-w-lg bg-base-200 shadow-lg'>
-            <div class='card-body'>
-              <Flow flow={flow()!} form={form} setSubmit={setSubmit}></Flow>
-            </div>
-          </div>
-          <pre>{JSON.stringify(flow(), undefined, 2)}</pre>
-        </Show>
-      </Suspense>
+    <div class='flex mx-auto max-w-lg flex-col'>
+      <div class='card bg-base-200 shadow-lg'>
+        <div class='card-body'>
+          <h2 class='card-title justify-center'>
+            <Switch fallback={'Sign In'}>
+              <Match when={flow()?.refresh}>Confirm Action</Match>
+              <Match when={flow()?.requested_aal === 'aal2'}>
+                Two-Factor Authentication
+              </Match>
+            </Switch>
+          </h2>
+          <div class='card-actions justify-end'></div>
+          <Suspense fallback={placeholderForm}>
+            <Flow flow={flow()} form={form} setSubmit={setSubmit}></Flow>
+          </Suspense>
+        </div>
+      </div>
+
+      <Link href='/singup' class='btn btn-primary'>
+        Sign up
+      </Link>
     </div>
   );
 };

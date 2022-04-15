@@ -1,4 +1,4 @@
-import { useI18n } from '@amoutonbrady/solid-i18n';
+import { useI18n } from '@solid-primitives/i18n';
 import type { Component } from 'solid-js';
 import { For, createResource } from 'solid-js';
 import { fetchCommittees } from '../api';
@@ -24,7 +24,7 @@ const Main: Component = () => {
           <p>{t('committees.get-to-know')}</p>
         </div>
 
-        <div class='carousel-center carousel space-x-4 bg-base-200 p-6 sm:snap-start sm:scroll-px-6 lg:carousel-center lg:rounded-box'>
+        <div class='carousel-center carousel bg-base-200 lg:carousel-center lg:rounded-box space-x-4 p-6 sm:snap-start sm:scroll-px-6'>
           <div class='carousel-item w-full shrink-0 flex-col p-8 sm:w-auto sm:max-w-sm lg:hidden'>
             <h1 class='my-4 text-3xl font-semibold'>{t('committees.greet')}</h1>
             <p>{t('committees.get-to-know')}</p>
@@ -55,7 +55,7 @@ const Main: Component = () => {
           </div>
         </section>
 
-        <div class='hidden lg:divider lg:divider-horizontal'></div>
+        <div class='lg:divider lg:divider-horizontal hidden'></div>
 
         <section class='flex-auto'>
           <SectionHeader

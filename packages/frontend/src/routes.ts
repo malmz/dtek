@@ -1,6 +1,5 @@
 import type { RouteDefinition } from 'solid-app-router';
 import { lazy } from 'solid-js';
-import Main from './pages/Main';
 import { NewsData } from './pages/News.data';
 
 export const routes: RouteDefinition[] = [
@@ -12,6 +11,7 @@ export const routes: RouteDefinition[] = [
     data: NewsData,
   },
   { path: '/lunch', component: lazy(() => import('./pages/Lunch')) },
-  { path: '/auth', component: lazy(() => import('./pages/Auth')) },
-  { path: '/login', component: lazy(() => import('./pages/Login')) },
+  { path: '/profile', component: lazy(() => import('./pages/Profile')) },
+  { path: '/signin', component: lazy(() => import('./pages/Signin')) },
+  { path: '/signup', component: lazy(() => import('./pages/Signup')) },
 ];

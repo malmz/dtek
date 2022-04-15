@@ -14,7 +14,8 @@ export const NewsEntry: Component<News> = (props) => {
     <article class='rounded-box bg-base-200 p-4'>
       <h1 class='text-xl font-semibold'>{props.title}</h1>
       <p>{props.body}</p>
-      <p>{eventDateFormat.format(props.published)}</p>
+      <p>{eventDateFormat.format(props.updated_at)}</p>
     </article>
   );
 };
+

@@ -1,4 +1,4 @@
-import { useI18n } from '@amoutonbrady/solid-i18n';
+import { useI18n } from '@solid-primitives/i18n';
 import type { Component } from 'solid-js';
 
 export const Welcome: Component = () => {

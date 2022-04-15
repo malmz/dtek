@@ -1,3 +1,4 @@
+import { useI18n } from '@solid-primitives/i18n';
 import { Link, NavLink } from 'solid-app-router';
 import type { Component } from 'solid-js';
 import { For } from 'solid-js';
@@ -20,6 +21,8 @@ export const Navbar: Component = () => {
    * ];
    */
 
+  const [t, { locale }] = useI18n();
+
   const links = [
     { title: 'Home', url: '/' },
     { title: 'News', url: '/news' },
@@ -41,6 +44,30 @@ export const Navbar: Component = () => {
           Dtek
         </Link>
       </div>
+
+      <nav class='hidden flex-none lg:block'>
+        <ul class='menu rounded-box menu-horizontal gap-1 p-2'>
+          <For each={links}>
+            {({ title, url }) => (
+              <li>
+                <NavLink href={url} end>
+                  <span>{title}</span>
+                </NavLink>
+              </li>
+            )}
+          </For>
+        </ul>
+      </nav>
+
+      <div class='flex gap-1 p-2'>
+        <Link href='/signin' class='btn btn-ghost hidden lg:inline-flex'>
+          Sign in
+        </Link>
+        <Link href='/signup' class='btn btn-outline'>
+          Sign up
+        </Link>
+      </div>
+
       <nav class='dropdown-end dropdown flex-none lg:hidden'>
         <label tabindex='0' class='btn btn-ghost'>
           <svg
@@ -60,21 +87,8 @@ export const Navbar: Component = () => {
         </label>
         <ul
           tabindex='0'
-          class='dropdown-content menu rounded-box mt-4 w-52 bg-base-100 p-2 shadow'
+          class='dropdown-content menu rounded-box bg-base-100 mt-4 w-52 p-2 shadow'
         >
-          <For each={links}>
-            {({ title, url }) => (
-              <li>
-                <NavLink href={url} end>
-                  <span>{title}</span>
-                </NavLink>
-              </li>
-            )}
-          </For>
-        </ul>
-      </nav>
-      <nav class='hidden flex-none lg:block'>
-        <ul class='menu rounded-box menu-horizontal p-2'>
           <For each={links}>
             {({ title, url }) => (
               <li>

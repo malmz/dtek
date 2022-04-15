@@ -1,22 +1,23 @@
 /* @refresh reload */
-import { I18nProvider } from '@amoutonbrady/solid-i18n';
 import { Router } from 'solid-app-router';
 import { render } from 'solid-js/web';
 import './index.css';
 import dictEn from '../locales/en.json';
 import { App } from './App';
+import { createI18nContext, I18nContext } from '@solid-primitives/i18n';
 
 const dict = {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   en: dictEn,
 };
+
+const value = createI18nContext(dict);
 
 render(
   () => (
     <Router base={import.meta.env.BASE_URL}>
-      <I18nProvider dict={dict}>
+      <I18nContext.Provider value={value}>
         <App />
-      </I18nProvider>
+      </I18nContext.Provider>
     </Router>
   ),
   document.getElementById('root') as HTMLElement

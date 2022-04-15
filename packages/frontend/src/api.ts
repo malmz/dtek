@@ -1,63 +1,87 @@
 import { Configuration, V0alpha2Api } from '@ory/kratos-client';
+import axios from 'axios';
 import type { CommitteeProps } from './components/Committee';
 
 export interface News {
   title: string;
   body: string;
-  published: Date;
-  place?: string;
-  startDate?: Date;
-  endDate?: Date;
+  created_at: Date;
+  updated_at: Date;
 }
 
-export interface Lunch {
-  dishes?: Dish[];
-  preformatted?: string;
+export interface Events {
+  title: string;
+  body: string;
+  created_at: Date;
+  updated_at: Date;
+  start_at: Date;
+  end_at: Date;
+  place?: string;
 }
 
 export interface Dish {
-  type?: string;
-  name: string;
-  allergens?: string[];
+  title?: string;
+  body: string;
+  preformatted: boolean;
+  allergens?: { codes: string[] };
   emmissions?: number;
 }
 
-interface Response {
-  news: News[];
-}
+export const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+  /* transformResponse: (data) => {
+    for (const key of Object.keys(data)) {
+      if (key.endsWith('_at')) {
+        data[key] = new Date(data[key]);
+      }
+    }
+    return data;
+  }, */
+});
+api.interceptors.response.use((response) => {
+  for (const key of Object.keys(response.data)) {
+    if (key.endsWith('_at')) {
+      response.data[key] = new Date(response.data[key]);
+    }
+  }
+  return response;
+});
 
-const apiUrl = import.meta.env.VITE_API_URL;
+export const ory = new V0alpha2Api(
+  new Configuration({
+    basePath: import.meta.env.VITE_AUTH_URL ?? import.meta.env.VITE_API_URL,
+    baseOptions: {
+      withCredentials: true,
+    },
+  })
+);
 
 export async function fetchNews(): Promise<News[]> {
-  const url = new URL('/api/news', apiUrl);
-  const response = await fetch(url.toString());
-  const { news } = (await response.json()) as Response;
-
-  return news.map((n) => ({
-    ...n,
-    published: new Date(n.published),
-    startDate: n.startDate ? new Date(n.startDate) : undefined,
-    endDate: n.endDate ? new Date(n.endDate) : undefined,
-  }));
+  const response = await api.get<{ news: News[] }>('/news');
+  const { news } = response.data;
+  return news;
 }
 
 export async function addNews(news: News): Promise<void> {
-  const url = new URL('/api/news', apiUrl);
-  await fetch(url.toString(), {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(news),
-  });
+  await api.post('/news', news);
 }
 
-export async function fetchLunch(id: string): Promise<Lunch> {
-  const url = new URL(`/api/lunch`, apiUrl);
-  url.searchParams.append('name', id);
-  const response = await fetch(url.toString());
-  const menu = (await response.json()) as Lunch;
-  return menu;
+export async function fetchLunch(params: {
+  id: string;
+  lang: string;
+  date?: Date;
+}): Promise<Dish[]> {
+  const response = await api.get<{ dishes: Dish[] }>('/lunch', {
+    params: {
+      resturant: params.id,
+      lang: params.lang,
+      date: params.date?.toISOString(),
+    },
+  });
+
+  const { dishes } = response.data;
+
+  return dishes;
 }
 
 const committeesData: CommitteeProps[] = [
@@ -102,12 +126,3 @@ const committeesData: CommitteeProps[] = [
 export async function fetchCommittees(): Promise<CommitteeProps[]> {
   return Promise.resolve(committeesData);
 }
-
-export const ory = new V0alpha2Api(
-  new Configuration({
-    basePath: new URL('/auth', apiUrl).href,
-    baseOptions: {
-      withCredentials: true,
-    },
-  })
-);
