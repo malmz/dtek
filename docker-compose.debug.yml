@@ -1,41 +1,9 @@
 version: '3.4'
 
 services:
-  proxy:
-    depends_on:
-      - frontend
-      - backend
-      - kratos
-    image: proxy
-    build:
-      context: ./proxy
-      dockerfile: Dockerfile
-    ports:
-      - '8080:8080'
-    networks:
-      - intranet
-
-  frontend:
-    image: frontend
-    build:
-      context: .
-      dockerfile: packages/frontend/Dockerfile
-    networks:
-      - intranet
-
-  backend:
+  kratos-migrate:
     depends_on:
       - postgresdb
-    image: backend
-    build:
-      context: .
-      dockerfile: packages/backend/Dockerfile
-    environment:
-      - DATABASE_URL=postgres://postgres:postgrespass@postgresdb:5432/postgres?sslmode=disable&max_conns=20&max_idle_conns=4
-    networks:
-      - intranet
-
-  kratos-migrate:
     image: kratos
     build:
       context: .
@@ -45,7 +13,7 @@ services:
     volumes:
       - kratos-sqlite:/var/lib/sqlite
       - kratos-home:/home/ory
-    command: -c /etc/config/kratos/kratos.yml migrate sql -e --yes
+    command: -c /etc/config/kratos/kratos-dev.yml migrate sql -e --yes
     restart: on-failure
     networks:
       - intranet
@@ -53,14 +21,18 @@ services:
   kratos:
     depends_on:
       - kratos-migrate
+      - postgresdb
     image: kratos
     build:
       context: .
       dockerfile: kratos/Dockerfile
+    ports:
+      - '4433:4433' # public
+      - '4434:4434' # admin
     restart: unless-stopped
     environment:
       - DSN=postgres://postgres:postgrespass@postgresdb:5432/postgres?sslmode=disable&max_conns=20&max_idle_conns=4
-    command: serve -c /etc/config/kratos/kratos.yml --dev --watch-courier
+    command: serve -c /etc/config/kratos/kratos-dev.yml --dev --watch-courier
     volumes:
       - kratos-sqlite:/var/lib/sqlite
       - kratos-home:/home/ory
@@ -69,6 +41,8 @@ services:
 
   postgresdb:
     image: postgres:14.2-alpine
+    ports:
+      - "5432:5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgrespass
