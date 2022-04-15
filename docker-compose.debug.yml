@@ -1,61 +1,22 @@
 version: '3.4'
 
 services:
+  proxy:
+    profiles:
+      - 'disabled'
+
+  frontend:
+    profiles:
+      - 'disabled'
+
+  backend:
+    profiles:
+      - 'disabled'
+
   kratos-migrate:
-    depends_on:
-      - postgresdb
-    image: kratos
-    build:
-      context: .
-      dockerfile: kratos/Dockerfile
-    environment:
-      - DSN=postgres://postgres:postgrespass@postgresdb:5432/postgres?sslmode=disable&max_conns=20&max_idle_conns=4
-    volumes:
-      - kratos-sqlite:/var/lib/sqlite
-      - kratos-home:/home/ory
     command: -c /etc/config/kratos/kratos-dev.yml migrate sql -e --yes
-    restart: on-failure
-    networks:
-      - intranet
+
 
   kratos:
-    depends_on:
-      - kratos-migrate
-      - postgresdb
-    image: kratos
-    build:
-      context: .
-      dockerfile: kratos/Dockerfile
-    ports:
-      - '4433:4433' # public
-      - '4434:4434' # admin
-    restart: unless-stopped
-    environment:
-      - DSN=postgres://postgres:postgrespass@postgresdb:5432/postgres?sslmode=disable&max_conns=20&max_idle_conns=4
     command: serve -c /etc/config/kratos/kratos-dev.yml --dev --watch-courier
-    volumes:
-      - kratos-sqlite:/var/lib/sqlite
-      - kratos-home:/home/ory
-    networks:
-      - intranet
 
-  postgresdb:
-    image: postgres:14.2-alpine
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgrespass
-      - POSTGRES_DB=postgres
-    networks:
-      - intranet
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
-networks:
-  intranet:
-
-volumes:
-  pgdata:
-  kratos-sqlite:
-  kratos-home:
