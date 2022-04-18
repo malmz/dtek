@@ -5,13 +5,11 @@
  */
 const config = {
   client: 'pg',
-  connection: 'postgres://localhost:5432/postgres',
-  pool: {
-    min: 2,
-    max: 10,
-  },
+  connection:
+    'postgres://postgres:postgrespass@localhost:5432/postgres?sslmode=disable&max_conns=20&max_idle_conns=4',
   migrations: {
     tableName: 'dtek_migrations',
+    schemaName: 'public',
     directory: './migrations',
     loadExtensions: ['.mjs'],
   },
