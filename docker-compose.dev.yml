@@ -16,7 +16,12 @@ services:
   kratos-migrate:
     command: -c /etc/config/kratos/kratos-dev.yml migrate sql -e --yes
 
-
   kratos:
     command: serve -c /etc/config/kratos/kratos-dev.yml --dev --watch-courier
+    ports:
+      - '4433:4433' # public
+      - '4434:4434' # admin
 
+  postgresdb:
+    ports:
+      - '5432:5432'
