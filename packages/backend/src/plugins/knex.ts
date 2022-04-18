@@ -68,15 +68,25 @@ declare module 'knex/types/tables' {
 
 export default fp(
   async (app) => {
+    const childLogger = app.log.child({ name: 'knex' });
+    // Knex is being dumb
+    const logger = {
+      debug: childLogger.debug.bind(childLogger),
+      warn: childLogger.warn.bind(childLogger),
+      error: childLogger.error.bind(childLogger),
+      deprecate: childLogger.warn.bind(childLogger),
+    };
+
     const handler = knex({
       client: 'pg',
       connection: process.env.DATABASE_URL,
       migrations: {
         tableName: 'dtek_migrations',
+        schemaName: 'public',
         directory: new URL('../../migrations', import.meta.url).pathname,
         loadExtensions: ['.mjs'],
       },
-      log: app.log.child({ name: 'knex' }),
+      log: logger,
       searchPath: ['dtek', 'public'],
     });
 
