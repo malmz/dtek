@@ -6,8 +6,8 @@
     "url": "https://github.com/Malmz"
   },
   "scripts": {
-    "frontend": "npm start -w frontend -- --host",
-    "backend": "npm start -w backend"
+    "frontend": "pnpm run start -w frontend",
+    "backend": "pnpm run start -w backend"
   },
   "license": "MIT",
   "private": true,
@@ -17,6 +17,7 @@
     "@typescript-eslint/parser": "^5.16.0",
     "eslint": "^8.12.0",
     "eslint-config-prettier": "^8.5.0",
+    "node-dev": "^7.4.2",
     "prettier": "^2.6.1",
     "prettier-plugin-tailwindcss": "^0.1.8",
     "typescript": "^4.6.3"

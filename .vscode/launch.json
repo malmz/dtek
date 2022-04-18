@@ -3,33 +3,33 @@
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
+  "compounds": [
+    {
+      "name": "debug all",
+      "configurations": ["debug backend", "debug frontend"],
+      "stopAll": true
+    }
+  ],
   "configurations": [
     {
-      "type": "pwa-node",
-      "request": "attach",
-      "name": "Attach to Backend in Docker",
-      "remoteRoot": "/usr/src/app",
-      "localRoot": "${workspaceFolder}/packages/backend/src",
-      "skipFiles": ["<node_internals>/**"],
-      "outFiles": ["${workspaceFolder}/packages/backend/dist/**/*.js"]
-    },
-    {
-      "name": "Open frontend",
+      "name": "debug frontend",
       "request": "launch",
       "type": "pwa-chrome",
       "url": "http://localhost:3000",
-      "webRoot": "${workspaceFolder}"
+      "webRoot": "${workspaceFolder}",
+      "preLaunchTask": "watch frontend"
     },
     {
       "type": "pwa-node",
-      "name": "Launch backend",
+      "name": "debug backend",
       "request": "launch",
-      "runtimeExecutable": "npm",
+      "runtimeExecutable": "pnpm",
       "runtimeArgs": ["start"],
       "cwd": "${workspaceFolder}/packages/backend",
       "skipFiles": ["<node_internals>/**"],
       "outFiles": ["${workspaceFolder}/packages/backend/dist/**/*.js"],
-      "outputCapture": "std"
+      "outputCapture": "std",
+      "preLaunchTask": "watch backend"
     }
   ]
 }

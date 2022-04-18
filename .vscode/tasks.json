@@ -1,16 +1,60 @@
 {
+  "version": "2.0.0",
   "tasks": [
     {
+      "label": "watch backend",
       "type": "typescript",
       "tsconfig": "packages/backend/tsconfig.json",
       "option": "watch",
       "problemMatcher": ["$tsc-watch"],
       "group": "build",
-      "label": "tsc: watch"
+      "isBackground": true
     },
     {
-      "type": "docker-compose"
-      
+      "label": "watch frontend",
+      "type": "npm",
+      "script": "start",
+      "options": {
+        "cwd": "${workspaceFolder}/packages/frontend"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "vite",
+        "pattern": {
+          "regexp": "."
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "dev server running at:",
+          "endsPattern": "ready in "
+        }
+      }
+    },
+    {
+      "label": "compose up dev",
+      "type": "docker-compose",
+      "dockerCompose": {
+        "up": {
+          "detached": true
+        },
+        "projectName": "dtek-dev",
+        "files": [
+          "${workspaceFolder}/docker-compose.yml",
+          "${workspaceFolder}/docker-compose.dev.yml"
+        ]
+      }
+    },
+    {
+      "label": "compose down dev",
+      "type": "docker-compose",
+      "dockerCompose": {
+        "down": {},
+        "projectName": "dtek-dev",
+        "files": [
+          "${workspaceFolder}/docker-compose.yml",
+          "${workspaceFolder}/docker-compose.dev.yml"
+        ]
+      }
     }
   ]
 }
