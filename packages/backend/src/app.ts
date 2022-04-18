@@ -10,10 +10,6 @@ const server: FastifyPluginAsync = async (app, opts) => {
     forceESM: true,
   });
 
-  /* app.register(fastifyPostgres, {
-    connectionString: process.env.DATABASE_URL,
-  }); */
-  //app.register(db);
   app.register(lunch);
 
   app.register(AutoLoad, {

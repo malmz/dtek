@@ -1,170 +1,65 @@
-import { createForm } from '@felte/solid';
-import type {
-  SelfServiceLoginFlow,
-  SubmitSelfServiceLoginFlowBody,
-} from '@ory/kratos-client';
-import { AxiosError } from 'axios';
-import { Link, useNavigate, useSearchParams } from 'solid-app-router';
-import { Component, Match, Switch } from 'solid-js';
-import { Show, Suspense, createResource } from 'solid-js';
-import { ory } from '../api';
-import { Flow } from '../components/Flow';
+import { Link } from 'solid-app-router';
+import {
+  Component,
+  ErrorBoundary,
+  Match,
+  Show,
+  Suspense,
+  Switch,
+} from 'solid-js';
+import { createSigninFlow, HandleFlowError } from '../auth.jsx';
+import { Flow } from '../components/Flow.jsx';
 
-function isAxiosError(error: any): error is AxiosError {
-  return (error as AxiosError).isAxiosError;
-}
+const Signin: Component = () => {
+  const { flow, form } = createSigninFlow();
 
-const Login: Component = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
-
-  const refresh = () => Boolean(searchParams.refresh);
-  const aal = () => searchParams.aal;
-  const returnTo = () => searchParams.return_to;
-  const flowId = () => searchParams.flow ?? '';
-
-  const [flow, { refetch, mutate }] = createResource<
-    SelfServiceLoginFlow | undefined,
-    string
-  >(flowId, async (id, { value }) => {
-    if (id === value?.id) {
-      return value;
-    }
-    try {
-      const res = await (id !== ''
-        ? // We are in a flow already
-          ory.getSelfServiceLoginFlow(id)
-        : // Create a new flow
-          ory.initializeSelfServiceLoginFlowForBrowsers(
-            refresh(),
-            aal(),
-            returnTo()
-          ));
-
-      return res.data;
-    } catch (error) {
-      if (isAxiosError(error)) {
-        handleError(error);
-      }
-      throw error;
-    }
-  });
-
-  const reset = () => {
-    if (flowId() === '') {
-      refetch();
-    }
-    setSearchParams({
-      flow: undefined,
-      refresh: undefined,
-      aal: undefined,
-      return_to: undefined,
-    });
-  };
-
-  const handleError = (err: AxiosError) => {
-    switch (err.response?.data.error?.id) {
-      case 'session_aal2_required':
-      case 'session_refresh_required':
-      case 'browser_location_change_required':
-        navigate(err.response.data.redirect_browser_to as string, {
-          resolve: false,
-        });
-        return;
-
-      case 'session_already_available':
-        navigate('/');
-        return;
-
-      case 'self_service_flow_return_to_forbidden':
-      case 'self_service_flow_expired':
-      case 'security_csrf_violation':
-      case 'security_identity_mismatch':
-        reset();
-        return;
-
-      default:
-        break;
-    }
-
-    switch (err.response?.status) {
-      case 410:
-        reset();
-        break;
-
-      case 400:
-        mutate(err.response.data);
-        break;
-
-      default:
-        break;
-    }
-
-    throw err;
-  };
-
-  const { form, setFields } = createForm<SubmitSelfServiceLoginFlowBody>({
-    onSubmit: async (v, ctx) => {
-      const flowL = flow();
-
-      setSearchParams({ flow: flowL?.id });
-
-      try {
-        const res = await ory.submitSelfServiceLoginFlow(
-          flowL?.id ?? '',
-          undefined,
-          v
-        );
-      } catch (error) {
-        if (isAxiosError(error)) {
-          handleError(error);
-        }
-        throw error;
-      }
-
-      if (flowL?.return_to) {
-        navigate(flowL.return_to);
-      } else {
-        navigate('/');
-      }
-    },
-  });
-
-  const setSubmit = (name: string, value: string) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    setFields(name as any, value);
-  };
-
-  const placeholderForm = (
-    <div class='flex animate-pulse'>
-      <div class='bg-base-300 h-8 flex-1 rounded'></div>
-    </div>
-  );
+  const placeholderForm = <span>Loading form...</span>;
 
   return (
-    <div class='flex mx-auto max-w-lg flex-col'>
-      <div class='card bg-base-200 shadow-lg'>
-        <div class='card-body'>
-          <h2 class='card-title justify-center'>
-            <Switch fallback={'Sign In'}>
-              <Match when={flow()?.refresh}>Confirm Action</Match>
+    <div class='hero min-h-screen bg-base-200'>
+      <div class='hero-content flex-col w-full max-w-md'>
+        <Link href='/'>
+          <img src='/src/assets/logo.svg' alt='logo' class='w-14' />
+        </Link>
+
+        <div class='text-center'>
+          <Show
+            when={!flow.error}
+            fallback={<h1 class='text-2xl font-normal'>Sign In to Dtek</h1>}
+          >
+            <Switch
+              fallback={<h1 class='text-2xl font-normal'>Sign In to Dtek</h1>}
+            >
+              <Match when={flow()?.refresh}>
+                <h1 class='text-5xl font-bold'>Confirm Action</h1>
+              </Match>
               <Match when={flow()?.requested_aal === 'aal2'}>
-                Two-Factor Authentication
+                <h1 class='text-5xl font-bold'>Two-Factor Authentication</h1>
               </Match>
             </Switch>
-          </h2>
-          <div class='card-actions justify-end'></div>
-          <Suspense fallback={placeholderForm}>
-            <Flow flow={flow()} form={form} setSubmit={setSubmit}></Flow>
-          </Suspense>
+          </Show>
+        </div>
+
+        <HandleFlowError fallback={<div>Someting went wrong...</div>}>
+          <div class='card w-full bg-base-100 shadow-lg'>
+            <div class='card-body'>
+              <Suspense fallback={placeholderForm}>
+                <Flow flow={flow()} form={form}></Flow>
+              </Suspense>
+            </div>
+          </div>
+        </HandleFlowError>
+
+        <div class='border-2 rounded-lg border-base-300 w-full p-4 text-center mt-4'>
+          <span>No account? </span>
+          <Link href='/singup' class='link'>
+            Create an account
+          </Link>
+          <span>.</span>
         </div>
       </div>
-
-      <Link href='/singup' class='btn btn-primary'>
-        Sign up
-      </Link>
     </div>
   );
 };
 
-export default Login;
+export default Signin;

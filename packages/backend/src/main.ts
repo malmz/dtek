@@ -1,18 +1,11 @@
-import 'dotenv/config';
+import { config } from 'dotenv';
 import fastify from 'fastify';
 import closeWithGrace from 'close-with-grace';
-const development = process.env.NODE_ENV === 'development';
 
-const dishes = [
-  {
-    resturant: 'hello',
-    for_date: new Date(),
-    lang: 'Swedish',
-    preformatted: false,
-    title: 'Hai',
-    body: 'test',
-  },
-];
+config({
+  path: new URL('../.env', import.meta.url).pathname,
+});
+const development = process.env.NODE_ENV === 'development';
 
 // Instantiate Fastify with some config
 const app = fastify({
@@ -27,8 +20,10 @@ const app = fastify({
   },
 });
 
+app.log.warn('Starting server');
+
 // Register your application as a normal plugin.
-app.register(import('./app.js'));
+await app.register(import('./app.js'));
 
 // delay is the number of milliseconds for the graceful close to finish
 const closeListeners = closeWithGrace(
@@ -46,11 +41,8 @@ app.addHook('onClose', async (instance, done) => {
   done();
 });
 
-const host = process.env.HOST ?? '127.0.0.1';
-const port = process.env.PORT ?? 3001;
-
 // Start listening.
-app.listen(port, host, (err) => {
+app.listen(process.env.PORT ?? 3001, process.env.HOST ?? '127.0.0.1', (err) => {
   if (err) {
     app.log.error(err);
     process.exit(1);

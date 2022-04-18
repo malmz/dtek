@@ -22,11 +22,11 @@ code {
   body {
     @apply bg-orange-100;
   }
-  html {
+  :root {
     font-family: 'Inter', sans-serif;
   }
   @supports (font-variation-settings: normal) {
-    html {
+    :root {
       font-family: 'Inter var', sans-serif;
     }
   }

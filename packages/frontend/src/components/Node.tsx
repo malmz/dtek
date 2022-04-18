@@ -29,14 +29,16 @@ const SubmitField: Component<
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const { field, onBlur, onInput } = createField(props.name);
   return (
-    <button
-      ref={field}
-      onclick={() => onInput(props.value)}
-      onBlur={onBlur}
-      {...props}
-    >
-      {props.children}
-    </button>
+    <div class='form-control'>
+      <button
+        ref={field}
+        onclick={() => onInput(props.value)}
+        onBlur={onBlur}
+        {...props}
+      >
+        {props.children}
+      </button>
+    </div>
   );
 };
 
@@ -51,6 +53,17 @@ const InputNode: Component<{
   const value = () => props.attributes.value as string;
   const disabled = () => props.attributes.disabled;
 
+  const autocomplete = () => {
+    switch (name()) {
+      case 'identifier':
+        return 'username';
+      case 'password':
+        return 'current-password';
+      default:
+        return undefined;
+    }
+  };
+
   const onClick = createMemo(() => {
     return () => {
       if (props.attributes.onclick) {
@@ -61,7 +74,7 @@ const InputNode: Component<{
   });
 
   const textenrty = (
-    <>
+    <div class='form-control'>
       <label class='label'>
         <span class='label-text'>{label()}</span>
       </label>
@@ -71,9 +84,10 @@ const InputNode: Component<{
         value={value()}
         disabled={disabled()}
         onclick={onClick()}
+        autocomplete={autocomplete()}
         class='input input-bordered input-primary'
       ></input>
-    </>
+    </div>
   );
 
   return (
@@ -82,27 +96,31 @@ const InputNode: Component<{
         <input type='hidden' name={name()} value={value() ?? 'true'}></input>
       </Match>
       <Match when={type() === 'checkbox'}>
-        <label class='label cursor-pointer'>
-          <span>{label()}</span>
-          <input
-            type='checkbox'
-            name={name()}
-            disabled={disabled()}
-            checked={value() === 'true'}
-          ></input>
-        </label>
+        <div class='form-control'>
+          <label class='label cursor-pointer'>
+            <span>{label()}</span>
+            <input
+              type='checkbox'
+              name={name()}
+              disabled={disabled()}
+              checked={value() === 'true'}
+            ></input>
+          </label>
+        </div>
       </Match>
       <Match when={type() === 'button'}>
-        <input
-          type='button'
-          name={name()}
-          value={value()}
-          disabled={disabled()}
-          class='btn'
-          onclick={onClick()}
-        >
-          {label()}
-        </input>
+        <div class='form-control'>
+          <input
+            type='button'
+            name={name()}
+            value={value()}
+            disabled={disabled()}
+            class='btn'
+            onclick={onClick()}
+          >
+            {label()}
+          </input>
+        </div>
       </Match>
       <Match when={type() === 'submit'}>
         <SubmitField

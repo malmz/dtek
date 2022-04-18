@@ -1,7 +1,8 @@
 import { useI18n } from '@solid-primitives/i18n';
-import type { Component } from 'solid-js';
+import { Component, createEffect, Show } from 'solid-js';
 import { For, createResource } from 'solid-js';
 import { fetchCommittees } from '../api';
+import { useSession } from '../auth.jsx';
 import { Committee } from '../components/Committee';
 import { Menu } from '../components/Menu';
 import { NewsList } from '../components/NewsList';
@@ -11,9 +12,18 @@ import { Welcome } from '../components/Welcome';
 const Main: Component = () => {
   const [t] = useI18n();
   const [committees] = createResource(fetchCommittees);
+  const { session } = useSession();
+
+  createEffect(() => {
+    console.log('session', session());
+  });
 
   return (
     <main class='text-zinc-900'>
+      <Show when={session()}>
+        <span>Session id: {session()?.id}</span>
+      </Show>
+
       <section>
         <Welcome></Welcome>
       </section>
