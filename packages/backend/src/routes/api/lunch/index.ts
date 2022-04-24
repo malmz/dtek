@@ -48,8 +48,7 @@ const plugin: FastifyPluginAsync = async (app) => {
               for_date: date ? new Date() : getLunchDate(),
             })
             .join('menu_item', 'lunch.id', 'menu_item.lunch_id')
-            .select('title', 'body', 'preformatted')
-            .orderBy('title'),
+            .select('title', 'body', 'preformatted'),
         };
       } catch (error) {
         return { dishes: [] };

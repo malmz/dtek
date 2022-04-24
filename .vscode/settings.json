@@ -1,4 +1,6 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
-  "npm.packageManager": "pnpm"
+  "npm.packageManager": "pnpm",
+  "i18n-ally.localesPaths": ["packages/frontend/locales"],
+  "i18n-ally.keystyle": "nested"
 }

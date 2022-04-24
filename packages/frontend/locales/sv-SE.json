@@ -1,0 +1,24 @@
+{
+  "general": {
+    "read-more": "Läs mer"
+  },
+  "company": {
+    "bang": "Är du ett företag",
+    "body": "som vill komma i kontakt med studenter eller en student som letar efter jobberbjudande? Du hittar mer info hos DAG!"
+  },
+  "welcome": {
+    "bang": "Välkommen",
+    "title": "till datateknologssektionen på Chalmers!",
+    "division": "Datateknologssektionen är en ideell organisation vars uppdrag är att förbättra studentlivet för alla studenter på datavetenskaps- och ingenjörsprogrammet. \nVi anordnar mottagningen för nya studenter, håller i fester, ger studentfeedback till Chalmers och mycket mer.",
+    "portal": "Det här är Dtek-portalen som innehåller användbara länkar och information om studentlivet på chalmers. \nHär kan du läsa om kommande evenemang, ta reda på vad som finns till lunch och mycket mer."
+  },
+  "committees": {
+    "greet": "Möt kommittérna",
+    "get-to-know": "Lär känna alla underbara studentstyrda kommittéer som hjälper till att förbättra kvaliteten på din utbildning när du studerar och tillför mycket roligt när du inte gör det det."
+  },
+  "menu": {
+    "monday": "Måndags",
+    "tomorrow": "Imorgons",
+    "today": "Dagens"
+  }
+}

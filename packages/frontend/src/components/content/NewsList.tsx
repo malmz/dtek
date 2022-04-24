@@ -6,8 +6,8 @@ import {
   For,
   Suspense,
 } from 'solid-js';
-import { fetchNews } from '../api';
-import { NewsEntry } from './NewsEntry';
+import { fetchNews } from '../../api';
+import { NewsEntry } from '../NewsEntry';
 
 export const NewsList: Component = () => {
   const [news] = createResource(fetchNews);

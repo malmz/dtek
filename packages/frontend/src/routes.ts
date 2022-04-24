@@ -12,12 +12,13 @@ export const routes: RouteDefinition[] = [
     children: [
       { path: '/', component: lazy(() => import('./pages/Main')) },
       {
-        path: '/news',
-        component: lazy(() => import('./pages/News')),
+        path: '/upcoming',
+        component: lazy(() => import('./pages/Upcoming')),
         data: NewsData,
       },
       { path: '/lunch', component: lazy(() => import('./pages/Lunch')) },
       { path: '/profile', component: lazy(() => import('./pages/Profile')) },
+      { path: '/*all', component: lazy(() => import('./pages/NotFound')) },
     ],
   },
 ];

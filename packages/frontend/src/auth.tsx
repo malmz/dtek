@@ -24,6 +24,7 @@ import {
   JSX,
   onMount,
   Resource,
+  ResourceReturn,
   untrack,
   useContext,
 } from 'solid-js';
@@ -166,8 +167,8 @@ export function createSigninFlow(): {
         }
         throw error;
       }
-
       navigate(flow()?.return_to ?? '/');
+      refetchSession();
     },
   });
 
@@ -213,8 +214,8 @@ export function createSignupFlow(): {
         }
         throw error;
       }
-
       navigate(flow()?.return_to ?? '/');
+      refetchSession();
     },
   });
 
@@ -224,9 +225,9 @@ export function createSignupFlow(): {
   };
 }
 
-export function createSession(): Resource<Session | undefined> {
+export function createSession(): ResourceReturn<Session | undefined> {
   const navigate = useNavigate();
-  const [session] = createResource(async () => {
+  const res = createResource(async () => {
     try {
       const session = await ory.toSession();
       return session.data;
@@ -236,6 +237,7 @@ export function createSession(): Resource<Session | undefined> {
           case 403:
           // This is a legacy error code thrown. See code 422 for
           // more details.
+          // eslint-disable-next-line no-fallthrough
           case 422:
             // This status code is returned when we are trying to
             // validate a session which has not yet completed
@@ -250,21 +252,63 @@ export function createSession(): Resource<Session | undefined> {
       throw error;
     }
   });
-  return session;
+  return res;
+}
+
+export function createLogoutHandler() {
+  const navigate = useNavigate();
+  const [logout] = createResource(async () => {
+    try {
+      const response = await ory.createSelfServiceLogoutFlowUrlForBrowsers();
+      return async () => {
+        try {
+          await ory.submitSelfServiceLogoutFlow(response.data.logout_token);
+        } catch (error) {
+          if (isAxiosError(error)) {
+            if (error.response?.status === 401) {
+              return;
+            }
+          }
+          throw error;
+        } finally {
+          navigate('/');
+          refetchSession();
+        }
+      };
+    } catch (error) {
+      if (isAxiosError(error)) {
+        switch (error.response?.status) {
+          case 401:
+            // do nothing, the user is not logged in
+            return;
+        }
+      }
+      throw error;
+    }
+  });
+  return logout;
 }
 
 export interface SessionCtx {
   session: Resource<Session | undefined>;
+  logout: Resource<(() => Promise<void>) | undefined>;
 }
 
 const [defaultRes] = createResource(async () => undefined);
-const SessionContext = createContext<SessionCtx>({ session: defaultRes });
+const SessionContext = createContext<SessionCtx>({
+  session: defaultRes,
+  logout: defaultRes,
+});
+
+let refetchSession: () => void = () => undefined;
 
 export const SessionProvider: Component = (props) => {
-  const session = createSession();
+  const [session, { refetch }] = createSession();
+  refetchSession = refetch;
+  const logout = createLogoutHandler();
 
   return (
-    <SessionContext.Provider value={{ session }}>
+    <SessionContext.Provider value={{ session, logout }}>
       {props.children}
     </SessionContext.Provider>
   );

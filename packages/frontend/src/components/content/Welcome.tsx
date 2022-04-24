@@ -7,7 +7,7 @@ export const Welcome: Component = () => {
   return (
     <div class='hero min-h-[65vh] bg-[url(./src/assets/welcome.jpeg)]'>
       <div class='hero-overlay backdrop-blur-sm backdrop-brightness-50'></div>
-      <div class='hero-content text-neutral-content'>
+      <div class='hero-content text-neutral-content py-16'>
         <div class='max-w-lg'>
           <h2 class='text-3xl sm:text-5xl'>
             <span class='text-primary'>{t('welcome.bang')}</span>{' '}

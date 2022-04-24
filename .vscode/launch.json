@@ -6,8 +6,7 @@
   "compounds": [
     {
       "name": "debug all",
-      "configurations": ["debug backend", "debug frontend"],
-      "stopAll": true
+      "configurations": ["debug backend", "debug frontend"]
     }
   ],
   "configurations": [

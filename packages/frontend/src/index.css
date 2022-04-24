@@ -19,9 +19,6 @@ code {
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply bg-orange-100;
-  }
   :root {
     font-family: 'Inter', sans-serif;
   }

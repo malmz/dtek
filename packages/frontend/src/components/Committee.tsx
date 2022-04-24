@@ -9,10 +9,12 @@ export interface CommitteeProps {
   mask?: boolean;
 }
 
+//sm:from-primary sm:to-secondary sm:text-primary-content
+
 export const Committee: Component<CommitteeProps> = (props) => {
   return (
     <Link
-      class='card flex-col bg-gradient-to-tr sm:flex-row sm:from-orange-400 sm:to-red-400 sm:text-zinc-50 sm:shadow-lg sm:duration-300 sm:ease-in-out sm:hover:-translate-y-1 sm:hover:shadow-xl'
+      class='card flex-col bg-gradient-to-tr sm:flex-row sm:bg-base-200 sm:shadow-lg sm:duration-300 sm:ease-in-out sm:hover:-translate-y-1 sm:hover:shadow-xl'
       href={props.homepage}
     >
       <figure class='shrink-0 pl-8'>

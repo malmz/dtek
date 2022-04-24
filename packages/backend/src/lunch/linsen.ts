@@ -7,24 +7,28 @@
 import fetch from 'node-fetch';
 import pdfjs from 'pdfjs-dist';
 import { TextItem } from 'pdfjs-dist/types/src/display/api';
-import { setISODay, setISOWeek, startOfISOWeek } from 'date-fns';
-import { LunchInsert, MenuItemInsert } from 'knex/types/tables';
 import {
-  fetchCurrentWeek as karenCurrentWeek,
-  fetchNextWeek as karenNextWeek,
-} from './karen.js';
+  areIntervalsOverlapping,
+  isWithinInterval,
+  nextFriday,
+  setISODay,
+  setISOWeek,
+  startOfISOWeek,
+} from 'date-fns';
+import { LunchInsert, MenuItemInsert } from 'knex/types/tables';
+import { KarenFetcher } from './karen.js';
+import axios from 'axios';
 
-const pdfUrl = 'http://www.cafelinsen.se/menyer/cafe-linsen-lunch-meny.pdf';
+const pdfClient = axios.create({
+  baseURL: 'http://www.cafelinsen.se/menyer/cafe-linsen-lunch-meny.pdf',
+  responseType: 'arraybuffer',
+  timeout: 20000,
+});
 
 async function fetchPdf(): Promise<ArrayBuffer> {
-  const ab = new AbortController();
   try {
-    const t = setTimeout(() => ab.abort(), 20000);
-    const response = await fetch(pdfUrl, {
-      signal: ab.signal,
-    });
-    clearTimeout(t);
-    return await response.arrayBuffer();
+    const response = await pdfClient.get('/');
+    return response.data;
   } catch (error) {
     throw new Error('Failed to fetch menu', { cause: error as Error });
   }
@@ -133,37 +137,44 @@ async function parsePdf(
   return dishes;
 }
 
-export async function fetchCurrentWeek(): Promise<
-  { lunch: LunchInsert; menu_item: Omit<MenuItemInsert, 'lunch_id'>[] }[]
-> {
-  try {
-    const data = await karenCurrentWeek(
-      'linsen',
-      'b672efaf-032a-4bb8-d2a5-08d558129279'
-    );
-    data.forEach((lunch) => {
-      lunch.menu_item.forEach((item) => {
-        item.title = undefined;
-      });
-    });
-    return data;
-  } catch (error) {
-    const data = await fetchPdf();
-    return await parsePdf(data);
+export class LinsenFetcher extends KarenFetcher {
+  constructor() {
+    super('linsen', 'b672efaf-032a-4bb8-d2a5-08d558129279');
   }
-}
 
-export async function fetchNextWeek(): Promise<
-  { lunch: LunchInsert; menu_item: Omit<MenuItemInsert, 'lunch_id'>[] }[]
-> {
-  const data = await karenNextWeek(
-    'linsen',
-    'b672efaf-032a-4bb8-d2a5-08d558129279'
-  );
-  data.forEach((lunch) => {
-    lunch.menu_item.forEach((item) => {
-      item.title = undefined;
-    });
-  });
-  return data;
+  async fetch(
+    startDate: Date,
+    endDate: Date
+  ): Promise<
+    { lunch: LunchInsert; menu_item: Omit<MenuItemInsert, 'lunch_id'>[] }[]
+  > {
+    try {
+      const data = await super.fetch(startDate, endDate);
+      data.forEach((lunch) => {
+        lunch.menu_item.forEach((item) => {
+          item.title = undefined;
+        });
+      });
+      return data;
+    } catch (error) {
+      // If the requested span is this week, fall back to the pdf
+      if (
+        areIntervalsOverlapping(
+          { start: startDate, end: endDate },
+          {
+            start: startOfISOWeek(new Date()),
+            end: nextFriday(startOfISOWeek(new Date())),
+          }
+        )
+      ) {
+        const data = await fetchPdf();
+        const menu = await parsePdf(data);
+        return menu.filter((m) =>
+          isWithinInterval(m.lunch.for_date, { start: startDate, end: endDate })
+        );
+      } else {
+        throw error;
+      }
+    }
+  }
 }

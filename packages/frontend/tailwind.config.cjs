@@ -2,15 +2,16 @@
 /* eslint-disable no-undef */
 const typography = require('@tailwindcss/typography');
 const daisyui = require('daisyui');
+const lineclamp = require('@tailwindcss/line-clamp');
 
 module.exports = {
   content: ['./index.html', './src/**/*.{tsx,ts}'],
-  theme: {
-    extend: {},
-  },
-  plugins: [typography, daisyui],
+  plugins: [typography, lineclamp, daisyui],
   daisyui: {
     themes: [
+      'light',
+      'dark',
+      'retro',
       {
         lighttek: {
           primary: '#f97316',
@@ -22,7 +23,6 @@ module.exports = {
           success: '#36D399',
           warning: '#FBBD23',
           error: '#F87272',
-
           '--navbar-padding': '2rem',
         },
       },

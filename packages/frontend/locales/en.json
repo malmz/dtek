@@ -8,5 +8,17 @@
   "committees": {
     "greet": "Meet the Committees",
     "get-to-know": "Get to know all the wonderfull student run committees that help improve the quality of your education when studying and having lots of fun when you're not."
+  },
+  "company": {
+    "bang": "Are you a company",
+    "body": "looking to get in contact with students or a student looking for job offerings? Check out DAG for more info!"
+  },
+  "general": {
+    "read-more": "Read more"
+  },
+  "menu": {
+    "monday": "Monday's",
+    "tomorrow": "Tomorrow's",
+    "today": "Todays's"
   }
 }

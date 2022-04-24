@@ -5,7 +5,7 @@ import { routes } from './routes';
 export const App: Component = () => {
   const Routes = useRoutes(routes);
   return (
-    <div class='flex min-h-screen flex-col'>
+    <div class='flex min-h-screen flex-col justify-between'>
       <ErrorBoundary fallback={<span>Something went wrong...</span>}>
         <Routes></Routes>
       </ErrorBoundary>

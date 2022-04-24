@@ -1,7 +1,50 @@
-import { createResource, ErrorBoundary, For, Show, Suspense } from 'solid-js';
+import {
+  createMemo,
+  createResource,
+  ErrorBoundary,
+  For,
+  JSX,
+  Show,
+  Suspense,
+} from 'solid-js';
 import type { Component } from 'solid-js';
 import { fetchLunch } from '../api';
 import { useI18n } from '@solid-primitives/i18n';
+import {
+  addBusinessDays,
+  isFriday,
+  isPast,
+  isWeekend,
+  nextMonday,
+  setHours,
+  startOfDay,
+  startOfHour,
+} from 'date-fns';
+
+export const MenuTitle: Component<JSX.HTMLAttributes<HTMLSpanElement>> = (
+  props
+) => {
+  const [t] = useI18n();
+
+  const title = () => {
+    const today = startOfDay(new Date());
+    const afternoon = startOfHour(setHours(today, 18));
+
+    if (isWeekend(new Date())) {
+      return t('menu.monday');
+    } else if (isPast(afternoon)) {
+      if (isFriday(today)) {
+        return t('menu.monday');
+      } else {
+        return t('menu.tomorrow');
+      }
+    } else {
+      return t('menu.today');
+    }
+  };
+
+  return <span {...props}>{title()} Lunch</span>;
+};
 
 export const Menu: Component<{ title: string; name: string }> = (props) => {
   const [t, { locale }] = useI18n();
