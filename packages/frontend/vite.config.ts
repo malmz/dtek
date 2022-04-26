@@ -1,10 +1,10 @@
 import { defineConfig } from 'vite';
-import solidPlugin from 'vite-plugin-solid';
+import solid from 'solid-start';
 
 export default defineConfig({
-  plugins: [solidPlugin()],
-  build: {
+  plugins: [solid()],
+  /* build: {
     target: 'esnext',
     polyfillDynamicImport: false,
-  },
+  }, */
 });

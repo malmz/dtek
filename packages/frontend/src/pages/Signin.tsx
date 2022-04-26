@@ -7,7 +7,7 @@ import {
   Suspense,
   Switch,
 } from 'solid-js';
-import { createSigninFlow, HandleFlowError } from '../auth.jsx';
+import { createSigninFlow, HandleFlowError } from '../lib/auth.jsx';
 import { Flow } from '../components/auth/Flow.jsx';
 
 const Signin: Component = () => {

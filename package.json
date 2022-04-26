@@ -26,5 +26,12 @@
     "packages/backend",
     "packages/frontend"
   ],
+  "pnpm": {
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "solid-start": "0.1.0-alpha.77"
+      }
+    }
+  },
   "packageManager": "pnpm@7.0.0-rc.2"
 }

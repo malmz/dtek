@@ -1,8 +1,8 @@
 import { useI18n } from '@solid-primitives/i18n';
 import { Component, createEffect, Show } from 'solid-js';
 import { For, createResource } from 'solid-js';
-import { fetchCommittees } from '../api';
-import { useSession } from '../auth.jsx';
+import { fetchCommittees } from '../lib/api';
+import { useSession } from '../lib/auth.jsx';
 import { Committee } from '../components/Committee';
 import { Menu, MenuTitle } from '../components/Menu';
 import { NewsList } from '../components/content/NewsList';

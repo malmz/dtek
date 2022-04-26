@@ -1,6 +1,6 @@
 import { Link } from 'solid-app-router';
 import { Component, Match, Show, Suspense, Switch } from 'solid-js';
-import { createSignupFlow, HandleFlowError } from '../auth.jsx';
+import { createSignupFlow, HandleFlowError } from '../lib/auth.jsx';
 import { Flow } from '../components/auth/Flow.jsx';
 
 const Registration: Component = () => {
