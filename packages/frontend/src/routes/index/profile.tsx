@@ -2,7 +2,7 @@ import type { AxiosError } from 'axios';
 import { Link } from 'solid-app-router';
 import type { Component } from 'solid-js';
 import { Show, Suspense, createResource } from 'solid-js';
-import { ory } from '../api';
+import { ory } from '../../lib/api';
 
 const Auth: Component = () => {
   const [session] = createResource(async () => {

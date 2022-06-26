@@ -71,12 +71,12 @@ function getFetchRange(lastDate: Date): { start: Date; end: Date } | undefined {
   const startNextWeek = nextMonday(startWeek);
   const fridayNext = nextFriday(startNextWeek);
 
-  const begin = isAfter(now, lastDate) ? startOfDay(now) : lastDate;
+  const begin = isAfter(now, lastDate) ? now : lastDate;
   const nextBegin = isAfter(lastDate, startNextWeek) ? lastDate : startNextWeek;
 
   if (isWithinInterval(begin, { start: startWeek, end: fridayAfternoon })) {
     if (isBefore(begin, friday)) {
-      return { start: begin, end: friday };
+      return { start: startOfDay(begin), end: friday };
     } else {
       return undefined;
     }

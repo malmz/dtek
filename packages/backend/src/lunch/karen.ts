@@ -12,7 +12,7 @@ interface DishOccurrence {
       displayNameCategoryName: string;
     };
   }[];
-  dishType: {
+  dishType?: {
     dishTypeName: string;
     dishTypeNameEnglish: string;
   };
@@ -98,8 +98,8 @@ export class KarenFetcher implements Fetcher {
 
         const title =
           displayName.displayNameCategory.displayNameCategoryName === 'English'
-            ? dish.dishType.dishTypeNameEnglish
-            : dish.dishType.dishTypeName;
+            ? dish.dishType?.dishTypeNameEnglish
+            : dish.dishType?.dishTypeName;
 
         const entry = menus.get(key) ?? {
           lunch: {

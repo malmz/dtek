@@ -8,7 +8,7 @@ import {
   Suspense,
 } from 'solid-js';
 import type { Component } from 'solid-js';
-import { fetchLunch } from '../api';
+import { fetchLunch } from '../lib/api';
 import { useI18n } from '@solid-primitives/i18n';
 import {
   addBusinessDays,

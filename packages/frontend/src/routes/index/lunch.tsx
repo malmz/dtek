@@ -1,6 +1,6 @@
 import type { Component } from 'solid-js';
-import { Menu, MenuTitle } from '../components/Menu';
-import { SectionHeader } from '../components/SectionHeader.jsx';
+import { Menu, MenuTitle } from '../../components/Menu';
+import { SectionHeader } from '../../components/SectionHeader.jsx';
 
 const Lunch: Component = () => {
   return (

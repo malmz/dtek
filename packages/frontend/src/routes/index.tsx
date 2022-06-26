@@ -1,10 +1,10 @@
 import { Outlet } from 'solid-app-router';
-import { Component, Suspense } from 'solid-js';
+import { Component } from 'solid-js';
 import { SessionProvider } from '../lib/auth.jsx';
-import { Footer } from './content/Footer.jsx';
-import { Navbar } from './Navbar.jsx';
+import { Footer } from '../components/content/Footer.jsx';
+import { Navbar } from '../components/Navbar.jsx';
 
-export const PageWrapper: Component = () => {
+const PageWrapper: Component = () => {
   return (
     <SessionProvider>
       <Navbar></Navbar>
@@ -13,3 +13,5 @@ export const PageWrapper: Component = () => {
     </SessionProvider>
   );
 };
+
+export default PageWrapper;

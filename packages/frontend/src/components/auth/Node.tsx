@@ -10,7 +10,10 @@ import type {
 import type { Component, JSX } from 'solid-js';
 import { createMemo, Switch, Match } from 'solid-js';
 import { Portal } from 'solid-js/web';
-import { isUiNodeInputAttributes, isUiNodeScriptAttributes } from '../../utils';
+import {
+  isUiNodeInputAttributes,
+  isUiNodeScriptAttributes,
+} from '../../lib/utils';
 
 type CrossOrigin = 'anonymous' | 'use-credentials' | '';
 type ReferrerPolicy =

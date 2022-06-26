@@ -6,7 +6,7 @@ import {
   For,
   Suspense,
 } from 'solid-js';
-import { fetchNews } from '../../api';
+import { fetchNews } from '../../lib/api';
 import { NewsEntry } from '../NewsEntry';
 
 export const NewsList: Component = () => {

@@ -5,7 +5,7 @@ export const Welcome: Component = () => {
   const [t] = useI18n();
 
   return (
-    <div class='hero min-h-[65vh] bg-[url(./src/assets/welcome.jpeg)]'>
+    <div class='hero min-h-[65vh] bg-[url(/images/welcome.jpeg)]'>
       <div class='hero-overlay backdrop-blur-sm backdrop-brightness-50'></div>
       <div class='hero-content text-neutral-content py-16'>
         <div class='max-w-lg'>

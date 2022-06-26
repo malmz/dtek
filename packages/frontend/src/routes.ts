@@ -1,24 +1,35 @@
 import type { RouteDefinition } from 'solid-app-router';
 import { lazy } from 'solid-js';
-import { PageWrapper } from './components/PageWrapper';
-import { NewsData } from './pages/News.data';
+import { UpcomingData } from './routes/index/upcoming/index.data';
 
 export const routes: RouteDefinition[] = [
-  { path: '/signin', component: lazy(() => import('./pages/Signin')) },
-  { path: '/signup', component: lazy(() => import('./pages/Signup')) },
+  { path: '/login', component: lazy(() => import('./routes/login')) },
+  { path: '/register', component: lazy(() => import('./routes/register')) },
   {
     path: '/',
-    component: PageWrapper,
+    component: lazy(() => import('./routes/index')),
     children: [
-      { path: '/', component: lazy(() => import('./pages/Main')) },
+      { path: '/', component: lazy(() => import('./routes/index/index')) },
       {
         path: '/upcoming',
-        component: lazy(() => import('./pages/Upcoming')),
-        data: NewsData,
+        children: [
+          {
+            path: '/',
+            component: lazy(() => import('./routes/index/upcoming')),
+            data: UpcomingData,
+          },
+          {
+            path: '/create',
+            component: lazy(() => import('./routes/index/upcoming/create')),
+          },
+        ],
       },
-      { path: '/lunch', component: lazy(() => import('./pages/Lunch')) },
-      { path: '/profile', component: lazy(() => import('./pages/Profile')) },
-      { path: '/*all', component: lazy(() => import('./pages/NotFound')) },
+      { path: '/lunch', component: lazy(() => import('./routes/index/lunch')) },
+      {
+        path: '/profile',
+        component: lazy(() => import('./routes/index/profile')),
+      },
     ],
   },
+  { path: '/*404', component: lazy(() => import('./routes/[...404]')) },
 ];

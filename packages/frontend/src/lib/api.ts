@@ -1,6 +1,6 @@
 import { Configuration, V0alpha2Api } from '@ory/kratos-client';
 import axios from 'axios';
-import type { CommitteeProps } from './components/Committee';
+import type { CommitteeProps } from '../components/Committee';
 
 export interface News {
   title: string;

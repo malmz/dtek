@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import { createForm } from '@felte/solid';
-import { useRouteData } from 'solid-app-router';
+import { Link, useRouteData } from 'solid-app-router';
 import type { Component } from 'solid-js';
 import { ErrorBoundary, For, Suspense } from 'solid-js';
-import type { Events, News as NewsType } from '../api';
-import { addNews } from '../api';
-import { EventEntry } from '../components/EventEntry.jsx';
-import { NewsEntry } from '../components/NewsEntry';
-import { SectionHeader } from '../components/SectionHeader.jsx';
-import { directive } from '../utils';
+import type { Events, News as NewsType } from '../../../lib/api';
+import { addNews } from '../../../lib/api';
+import { EventEntry } from '../../../components/EventEntry.jsx';
+import { NewsEntry } from '../../../components/NewsEntry';
+import { SectionHeader } from '../../../components/SectionHeader.jsx';
+import { directive } from '../../../lib/utils';
 
 declare module 'solid-js' {
   namespace JSX {
@@ -64,6 +64,11 @@ const News: Component = () => {
 
   return (
     <main>
+      <div class='px-12'>
+        <Link href='create' class='btn btn-primary'>
+          Create
+        </Link>
+      </div>
       <div class='flex flex-row gap-4 p-8'>
         <div class='flex-grow max-w-lg mr-4'>
           <SectionHeader title='Upcomming events'></SectionHeader>
@@ -96,48 +101,3 @@ const News: Component = () => {
 };
 
 export default News;
-
-/* <div class='card m-8 mr-auto max-w-lg bg-base-200 shadow-lg'>
-        <div class='card-body '>
-          <form use:form class='form-control gap-2'>
-            <input
-              type='text'
-              name='title'
-              placeholder='Title'
-              class='input input-bordered input-primary'
-            />
-            <textarea
-              name='body'
-              class='textarea textarea-primary'
-              placeholder='Post...'
-            ></textarea>
-            <label class='label'>
-              <span class='label-text'>Start</span>
-            </label>
-            <input
-              type='datetime-local'
-              name='startDate'
-              placeholder='Start'
-              class='input input-primary'
-            />
-            <label class='label'>
-              <span class='label-text'>End</span>
-            </label>
-            <input
-              type='datetime-local'
-              name='endDate'
-              placeholder='End'
-              class='input input-primary'
-            />
-            <input
-              type='text'
-              name='place'
-              placeholder='Place'
-              class='input input-bordered input-primary'
-            />
-            <button type='submit' class='btn btn-primary'>
-              Post
-            </button>
-          </form>
-        </div>
-      </div> */

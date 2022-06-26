@@ -2,7 +2,7 @@ import { useI18n } from '@solid-primitives/i18n';
 import { Link, NavLink } from 'solid-app-router';
 import { Component, createEffect, Show } from 'solid-js';
 import { For } from 'solid-js';
-import { useSession } from '../auth.jsx';
+import { useSession } from '../lib/auth.jsx';
 import { SigninLink } from './auth/SigninLink.jsx';
 
 // import styles from './Navbar.module.css';

@@ -7,7 +7,7 @@ import {
   Suspense,
   Switch,
 } from 'solid-js';
-import { createSigninFlow, HandleFlowError } from '../auth.jsx';
+import { createSigninFlow, HandleFlowError } from '../lib/auth.jsx';
 import { Flow } from '../components/auth/Flow.jsx';
 
 const Signin: Component = () => {
@@ -19,7 +19,7 @@ const Signin: Component = () => {
     <div class='hero min-h-screen bg-base-200'>
       <div class='hero-content flex-col w-full max-w-md'>
         <Link href='/'>
-          <img src='/src/assets/logo.svg' alt='logo' class='w-14' />
+          <img src='/images/logo.svg' alt='logo' class='w-14' />
         </Link>
 
         <div class='text-center'>

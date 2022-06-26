@@ -1,13 +1,13 @@
 import { useI18n } from '@solid-primitives/i18n';
 import { Component, createEffect, Show } from 'solid-js';
 import { For, createResource } from 'solid-js';
-import { fetchCommittees } from '../api';
-import { useSession } from '../auth.jsx';
-import { Committee } from '../components/Committee';
-import { Menu, MenuTitle } from '../components/Menu';
-import { NewsList } from '../components/content/NewsList';
-import { SectionHeader } from '../components/SectionHeader';
-import { Welcome } from '../components/content/Welcome';
+import { fetchCommittees } from '../../lib/api';
+import { useSession } from '../../lib/auth.jsx';
+import { Committee } from '../../components/Committee';
+import { Menu, MenuTitle } from '../../components/Menu';
+import { NewsList } from '../../components/content/NewsList';
+import { SectionHeader } from '../../components/SectionHeader';
+import { Welcome } from '../../components/content/Welcome';
 
 const Main: Component = () => {
   const [t] = useI18n();
@@ -79,7 +79,7 @@ const Main: Component = () => {
           />
           <div class='flex flex-col gap-4'>
             <img
-              src='/src/assets/DAG_logga.webp'
+              src='/images/DAG_logga.webp'
               alt='DAG Logo'
               class='w-52 self-center'
             />

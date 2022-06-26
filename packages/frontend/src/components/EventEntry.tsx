@@ -1,6 +1,6 @@
 import { useI18n } from '@solid-primitives/i18n';
 import { Component, createMemo, Match, Show, Switch } from 'solid-js';
-import { Events } from '../api.js';
+import { Events } from '../lib/api.js';
 import {
   differenceInCalendarDays,
   isAfter,
